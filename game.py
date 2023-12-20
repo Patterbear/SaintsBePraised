@@ -53,20 +53,41 @@ def display_card(master, card):
     profile.title(card.name)
 
     # Nation icon
-    nation_icon = tkinter.PhotoImage(file="data/images/" + card.nation + "-icon.png").subsample(20, 20)
+    nation_icon = tkinter.PhotoImage(file="data/images/icon-" + card.nation + ".png").subsample(20, 20)
     nation_icon_label = tkinter.Label(profile, image=nation_icon)
     nation_icon_label.image = nation_icon
     nation_icon_label.grid(row=0, column=0)
 
     # Card name
     name_label = tkinter.Label(profile, text=card.name, font=font_large)
-    name_label.grid(row=0, column=1, columnspan=2)
+    name_label.grid(row=0, column=1, columnspan=6)
 
     # Card image
     card_image = tkinter.PhotoImage(file="data/images/" + card.card_id + ".png").subsample(4, 4)
     card_image_label = tkinter.Label(profile, image=card_image)
     card_image_label.image = card_image  # keep image in memory
-    card_image_label.grid(row=1, column=1, columnspan=5)
+    card_image_label.grid(row=1, column=0, columnspan=7)
+
+    # Health stat
+    health_icon = tkinter.PhotoImage(file="data/images/icon-health.png").subsample(30, 30)
+    health_icon_label = tkinter.Label(profile, image=health_icon)
+    health_icon_label.image = health_icon
+    health_icon_label.grid(row=2, column=0)
+    tkinter.Label(profile, text=str(card.health)).grid(row=2, column=1)
+
+    # Attack stat
+    attack_icon = tkinter.PhotoImage(file="data/images/icon-attack.png").subsample(30, 30)
+    attack_icon_label = tkinter.Label(profile, image=attack_icon)
+    attack_icon_label.image = attack_icon
+    attack_icon_label.grid(row=2, column=2)
+    tkinter.Label(profile, text=str(card.attack)).grid(row=2, column=3)
+
+    # Defence stat
+    defence_icon = tkinter.PhotoImage(file="data/images/icon-defence.png").subsample(30, 30)
+    defence_icon_label = tkinter.Label(profile, image=defence_icon)
+    defence_icon_label.image = defence_icon
+    defence_icon_label.grid(row=2, column=4)
+    tkinter.Label(profile, text=str(card.defence)).grid(row=2, column=5)
 
 
 # Main function
