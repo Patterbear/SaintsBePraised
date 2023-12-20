@@ -3,6 +3,7 @@ import tkinter
 from classes.card import Card
 from data.cards import saints, knights, divines
 
+
 # Game fonts
 font_large = "Helvetica 20"
 font_medium = "Helvetica 15"
@@ -34,6 +35,7 @@ def load_cards():
     saints_list = create_cards_from_list(saints)
     for i in range(0, len(saints_list)):
         loaded_cards.append(saints_list[i])
+        saints_list[i].get_ability(saints_list[i].abilities[0])
 
     # Append knight objects
     knights_list = create_cards_from_list(knights)
@@ -93,6 +95,20 @@ def display_card(master, card):
     defence_icon_label.image = defence_icon
     defence_icon_label.grid(row=2, column=4)
     tkinter.Label(profile, text=str(card.defence)).grid(row=2, column=5)
+
+    # Abilities
+    row = 3
+    column = 0
+    for i in range(0, len(card.abilities)):
+        ability = card.get_ability(card.abilities[i])
+        bullet_point = tkinter.PhotoImage(file="data/images/icon-all.png").subsample(40, 40)
+        bullet_point_label = tkinter.Label(profile, image=bullet_point)
+        bullet_point_label.grid(row=row, column=column)
+        bullet_point_label.image = bullet_point
+        tkinter.Label(profile, text=ability[0], font=font_medium).grid(row=row, column=column+1, columnspan=4)
+        tkinter.Label(profile, text=ability[1], font=font_medium).grid(row=row, column=column+5)
+        tkinter.Label(profile, text=ability[2], font=font_extra_small).grid(row=row+1, column=column, columnspan=6)
+        row += 2
 
 
 # Main function
