@@ -1,8 +1,7 @@
 import tkinter
 
 from classes.card import Card
-from data.cards import saints, knights, divines
-
+from data.cards import saints, knights, divines, demons
 
 # Game fonts
 font_large = "Helvetica 20"
@@ -46,6 +45,11 @@ def load_cards():
     divines_list = create_cards_from_list(divines)
     for i in range(0, len(divines_list)):
         loaded_cards.append(divines_list[i])
+
+    # Append demon objects
+    demons_list = create_cards_from_list(demons)
+    for i in range(0, len(demons_list)):
+        loaded_cards.append(demons_list[i])
 
     return loaded_cards
 

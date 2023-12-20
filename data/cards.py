@@ -19,3 +19,9 @@ divines = {
     "almighty-god": ["The Almighty God", "all", 100, 100000, 100000, 100000, ["divine-wrath"]],
     "jesus-christ": ["The Lord Jesus Christ", "all", 100, 1000, 500, 500, ["son-of-god", "resurrection"]],
 }
+
+demons = {
+    "demon-knight": ["Demon Knight", "demon", 10, 50, 10, 10, []],
+    "demon-sorcerer": ["Demon Sorcerer", "demon", 10, 50, 10, 10, []],
+    "demon-warlord": ["Demon Warlord", "demon", 30, 100, 30, 30, []],
+}
