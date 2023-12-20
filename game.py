@@ -57,7 +57,7 @@ def display_card(master, card):
     name_label.pack()
 
     # Card image
-    card_image = tkinter.PhotoImage(file="data/images/knight-of-england-small.png")
+    card_image = tkinter.PhotoImage(file="data/images/" + card.card_id + ".png").subsample(4, 4)
     card_image_label = tkinter.Label(profile, image=card_image)
     card_image_label.image = card_image  # keep image in memory
     card_image_label.pack()

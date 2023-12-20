@@ -2,7 +2,7 @@
 # these haven't been put in one dictionary because saints, knights and divines will have their own subclasses with unique attributes and methods
 
 saints = {
-    "saint-george": ["George of Lydda", "england", 50, 500, 100, 70, ["dragon-slayer", "unwavering-faith", "praetorian-guard"]],
+    "saint-george": ["George of Lydda", "england", 50, 500, 70, 60, ["dragon-slayer", "unwavering-faith", "praetorian-guard"]],
     "saint-andrew": ["Andrew the Apostle", "scotland", 50, 500, 30, 50, ["apostle-of-christ", "fisher-of-men", "martyred-by-crucifixion"]],
     "saint-david": ["David of Mynyw", "wales", 50, 500, 20, 50, ["raising-the-earth", "asceticism", "vision-from-christ"]],
     "saint-patrick": ["Patrick the Enlightener", "ireland", 50, 500, 60, 50, ["snake-banisher", "fast-on-the-mountain", "enlightener-of-ireland"]]
