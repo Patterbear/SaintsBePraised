@@ -9,13 +9,13 @@ saints = {
 }
 
 knights = {
-    "knight-of-england": ["Knight of England", "england", 10, 100, 25, 25, ["call-upon-george", "for-england"]],
-    "knight-of-scotland": ["Knight of Scotland", "scotland", 10, 100, 25, 25, ["call-upon-andrew", "for-scotland"]],
-    "knight-of-wales": ["Knight of Wales", "wales", 10, 100, 25, 25, ["call-upon-david", "for-wales"]],
-    "knight-of-ireland": ["Knight of Ireland", "ireland", 10, 100, 25, 25, ["call-upon-patrick", "ireland"]],
+    "knight-of-england": ["Knight of England", "england", 10, 100, 25, 25, ["warrior-of-god", "for-nation", "healing-prayer"]],
+    "knight-of-scotland": ["Knight of Scotland", "scotland", 10, 100, 25, 25, ["warrior-of-god", "for-nation", "healing-prayer"]],
+    "knight-of-wales": ["Knight of Wales", "wales", 10, 100, 25, 25, ["warrior-of-god", "for-nation", "healing-prayer"]],
+    "knight-of-ireland": ["Knight of Ireland", "ireland", 10, 100, 25, 25, ["warrior-of-god", "for-nation", "healing-prayer"]],
 }
 
 divines = {
-    "almighty-god": ["The Almighty God", "all", 100, 100000, 100000, 100000, ["divine-wrath", "eternal-love", "omnipotent"]],
+    "almighty-god": ["The Almighty God", "all", 100, 100000, 100000, 100000, ["divine-wrath"]],
     "jesus-christ": ["The Lord Jesus Christ", "all", 100, 1000, 500, 500, ["son-of-god", "resurrection"]],
 }

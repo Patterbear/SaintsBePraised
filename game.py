@@ -52,20 +52,21 @@ def display_card(master, card):
     profile = tkinter.Toplevel(master)
     profile.title(card.name)
 
+    # Nation icon
+    nation_icon = tkinter.PhotoImage(file="data/images/" + card.nation + "-icon.png").subsample(20, 20)
+    nation_icon_label = tkinter.Label(profile, image=nation_icon)
+    nation_icon_label.image = nation_icon
+    nation_icon_label.grid(row=0, column=0)
+
     # Card name
     name_label = tkinter.Label(profile, text=card.name, font=font_large)
-    name_label.pack()
+    name_label.grid(row=0, column=1, columnspan=2)
 
     # Card image
     card_image = tkinter.PhotoImage(file="data/images/" + card.card_id + ".png").subsample(4, 4)
     card_image_label = tkinter.Label(profile, image=card_image)
     card_image_label.image = card_image  # keep image in memory
-    card_image_label.pack()
-
-    # Card stats
-    tkinter.Label(profile, text="Base Health: " + str(card.health), font=font_medium).pack()
-    tkinter.Label(profile, text="Attack: " + str(card.attack), font=font_medium).pack()
-    tkinter.Label(profile, text="Defence: " + str(card.defence), font=font_medium).pack()
+    card_image_label.grid(row=1, column=1, columnspan=5)
 
 
 # Main function
