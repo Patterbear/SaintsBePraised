@@ -133,25 +133,69 @@ def display_card(master, card):
         row += 2
 
 
-# Main function
-def main():
-    root = tkinter.Tk()
-    root.winfo_toplevel().iconphoto(True, tkinter.Image("photo", file="data/images/icon-all.png"))
-    root.title("Saints Be Praised - Demo")
+# Card catalogue
+# displays all existing card titles and images
+# allows the user to view the full cards by pressing the buttons underneath the images
+def card_catalogue(master, cards):
+    catalogue = tkinter.Toplevel(master)
+    catalogue.title("SaintsBePraised - Card Catalogue")
 
-    cards = load_cards()
+    row = 0
+    column = 0
+    for i in range(0, len(cards)):
+        card = cards[i]
 
-    #for i in range(0, len(cards)):
-        #display_card(root, cards[i])
+        # Name
+        tkinter.Label(catalogue, text=card.name, font=font_medium).grid(row=row, column=column)
 
+        # Card image
+        card_image = tkinter.PhotoImage(file="data/images/" + card.card_id + ".png").subsample(10, 10)
+        card_image_label = tkinter.Label(catalogue, image=card_image)
+        card_image_label.image = card_image  # keep image in memory
+        card_image_label.grid(row=row+1, column=column)
+
+        # View button
+        tkinter.Button(catalogue, text="View", font=font_small, command=lambda this_card=card: display_card(catalogue, this_card)).grid(row=row+2, column=column, pady=(2, 5))
+
+        if column == 5:
+            column = 0
+            row = row + 3
+        else:
+            column += 1
+
+
+# Random battle
+# sets up an auto battle between to randomly selected cards
+def random_battle(master, cards):
     card1 = choice(cards)
     card2 = choice(cards)
 
     # displays battling cards
-    display_card(root, card1)
-    display_card(root, card2)
+    display_card(master, card1)
+    display_card(master, card2)
 
     battle.auto_battle(card1, card2)
+
+
+# Main function
+def main():
+    root = tkinter.Tk()
+    root.winfo_toplevel().iconphoto(True, tkinter.Image("photo", file="data/images/icon-all.png"))
+    root.geometry("405x405")
+    root.title("Saints Be Praised - Demo")
+
+    # Load cards from file
+    cards = load_cards()
+
+    # Title image
+    title_image = tkinter.PhotoImage(file="data/images/splash.png").subsample(8, 8)
+    title_image_label = tkinter.Label(root, image=title_image)
+    title_image_label.image = title_image  # keep image in memory
+    title_image_label.pack()
+
+    # Buttons
+    tkinter.Button(root, text="Card Catalogue", font=font_medium, command=lambda: card_catalogue(root, cards)).pack()
+    tkinter.Button(root, text="Random Battle", font=font_medium, command=lambda: random_battle(root, cards)).pack()
 
     root.mainloop()
 
