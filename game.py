@@ -1,7 +1,9 @@
 import tkinter
+from random import choice
 
+import battle
 from classes.card import Card
-from data.cards import saints, knights, divines, demons
+from data.cards import saints, knights, divines, demons, horsemen
 
 # Game fonts
 font_large = "Helvetica 20"
@@ -25,6 +27,14 @@ def create_cards_from_list(card_list):
     return created_cards
 
 
+# Testing function to give all cards the basic moves
+def set_moves_to_basic(cards):
+    for i in range(0, len(cards)):
+        cards[i].abilities = ["attack0", "brace0", "heal0"]
+
+    return cards
+
+
 # Load cards function
 # loads all cards from storage into list for main game
 def load_cards():
@@ -34,7 +44,6 @@ def load_cards():
     saints_list = create_cards_from_list(saints)
     for i in range(0, len(saints_list)):
         loaded_cards.append(saints_list[i])
-        saints_list[i].get_ability(saints_list[i].abilities[0])
 
     # Append knight objects
     knights_list = create_cards_from_list(knights)
@@ -50,6 +59,14 @@ def load_cards():
     demons_list = create_cards_from_list(demons)
     for i in range(0, len(demons_list)):
         loaded_cards.append(demons_list[i])
+
+    # Append horsemen objects
+    horsemen_list = create_cards_from_list(horsemen)
+    for i in range(0, len(horsemen_list)):
+        loaded_cards.append(horsemen_list[i])
+
+    # Set all card moves to the basic ones
+    loaded_cards = set_moves_to_basic(loaded_cards)
 
     return loaded_cards
 
@@ -91,7 +108,7 @@ def display_card(master, card):
     attack_icon_label = tkinter.Label(profile, image=attack_icon, font=font_small)
     attack_icon_label.image = attack_icon
     attack_icon_label.grid(row=2, column=2)
-    tkinter.Label(profile, text=str(card.attack)).grid(row=2, column=3)
+    tkinter.Label(profile, text=str(card.power)).grid(row=2, column=3)
 
     # Defence stat
     defence_icon = tkinter.PhotoImage(file="data/images/icon-defence.png").subsample(30, 30)
@@ -105,13 +122,14 @@ def display_card(master, card):
     column = 0
     for i in range(0, len(card.abilities)):
         ability = card.get_ability(card.abilities[i])
-        bullet_point = tkinter.PhotoImage(file="data/images/icon-all.png").subsample(40, 40)
+
+        bullet_point = tkinter.PhotoImage(file="data/images/icon-" + ability[0] + ".png").subsample(40, 40)
         bullet_point_label = tkinter.Label(profile, image=bullet_point)
         bullet_point_label.grid(row=row, column=column)
         bullet_point_label.image = bullet_point
-        tkinter.Label(profile, text=ability[0], font=font_medium).grid(row=row, column=column+1, columnspan=4)
-        tkinter.Label(profile, text=ability[1], font=font_medium).grid(row=row, column=column+5)
-        tkinter.Label(profile, text=ability[2], font=font_extra_small).grid(row=row+1, column=column, columnspan=6)
+        tkinter.Label(profile, text=ability[1], font=font_medium).grid(row=row, column=column+1, columnspan=4)
+        tkinter.Label(profile, text=ability[2], font=font_medium).grid(row=row, column=column+5)
+        tkinter.Label(profile, text=ability[3], font=font_extra_small).grid(row=row+1, column=column, columnspan=6)
         row += 2
 
 
@@ -122,8 +140,18 @@ def main():
     root.title("Saints Be Praised - Demo")
 
     cards = load_cards()
-    for i in range(0, len(cards)):
-        display_card(root, cards[i])
+
+    #for i in range(0, len(cards)):
+        #display_card(root, cards[i])
+
+    card1 = choice(cards)
+    card2 = choice(cards)
+
+    # displays battling cards
+    display_card(root, card1)
+    display_card(root, card2)
+
+    battle.auto_battle(card1, card2)
 
     root.mainloop()
 

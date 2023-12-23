@@ -5,7 +5,8 @@ saints = {
     "saint-george": ["George of Lydda", "england", 50, 500, 70, 60, ["dragon-slayer", "unwavering-faith", "praetorian-guard"]],
     "saint-andrew": ["Andrew the Apostle", "scotland", 50, 500, 30, 50, ["apostle-of-christ", "fisher-of-men", "martyred-by-crucifixion"]],
     "saint-david": ["David of Mynyw", "wales", 50, 500, 20, 50, ["raising-the-earth", "asceticism", "vision-from-christ"]],
-    "saint-patrick": ["Patrick the Enlightener", "ireland", 50, 500, 60, 50, ["snake-banisher", "fast-on-the-mountain", "enlightener-of-ireland"]]
+    "saint-patrick": ["Patrick the Enlightener", "ireland", 50, 500, 60, 50, ["snake-banisher", "fast-on-the-mountain", "enlightener-of-ireland"]],
+    "saint-michael": ["Michael the Archangel", "all", 70, 750, 80, 60, []]
 }
 
 knights = {
@@ -24,4 +25,11 @@ demons = {
     "demon-knight": ["Demon Knight", "demon", 10, 50, 10, 10, []],
     "demon-sorcerer": ["Demon Sorcerer", "demon", 10, 50, 10, 10, []],
     "demon-warlord": ["Demon Warlord", "demon", 30, 100, 30, 30, []],
+}
+
+horsemen = {
+    "horseman-conquest": ["Conquest", "horseman", 50, 500, 80, 50, []],
+    "horseman-war": ["War", "horseman", 50, 500, 90, 60, []],
+    "horseman-famine": ["Famine", "horseman", 50, 500, 70, 80, []],
+    "horseman-death": ["Death", "horseman", 50, 500, 100, 100, []],
 }
