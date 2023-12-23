@@ -1,4 +1,5 @@
 # format: type, title, cost, description, duration, strength
+from classes.move import Move
 
 moves = {
     "attack0": ["attack", "Attack", 10, "Deal 5 damage.",0, 5],
@@ -16,6 +17,13 @@ moves = {
     "heal2": ["health", "Advanced Prayer", 40, "Heal 15% health.", 0, 15],
     "heal3": ["health", "Master Prayer", 40, "Heal 20% health.", 0, 20],
 }
+
+
+# Produces a move object from move ID
+def get_move(move_id):
+    move = moves.get(move_id)
+    return Move(move_id, move[0], move[1], move[2], move[3], move[4])
+
 """
 "dragon-slayer": ["Dragon Slayer", 80, "Attack increases by 30 and enemy defence is ignored.", 0, 30, 0, ["attack-increase," "ignore-defence"], 50],
 "unwavering-faith": ["Unwavering Faith", 20,  "Defence increase of 20 for 2 turns.", 0, 0, 20, ["increase-defence"], 2],

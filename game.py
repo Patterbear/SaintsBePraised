@@ -1,4 +1,3 @@
-#import tkinter
 from random import choice
 from tkinter import Tk, Label, Button, Toplevel, PhotoImage, Image, HORIZONTAL, EW
 from tkinter.ttk import Separator
@@ -8,6 +7,8 @@ from classes.card import Card
 from data.cards import saints, knights, divines, demons, horsemen
 
 # Game fonts
+from data.moves import get_move
+
 font_large = "Helvetica 20"
 font_medium = "Helvetica 15"
 font_small = "Helvetica 10"
@@ -32,7 +33,7 @@ def create_cards_from_list(card_list):
 # Testing function to give all cards the basic moves
 def set_moves_to_basic(cards):
     for i in range(0, len(cards)):
-        cards[i].abilities = ["attack0", "brace0", "heal0"]
+        cards[i].moves = [get_move("attack0"), get_move("brace0"), get_move("heal0")]
 
     return cards
 
@@ -119,19 +120,18 @@ def display_card(master, card):
     defence_icon_label.grid(row=2, column=4)
     Label(profile, text=str(card.defence)).grid(row=2, column=5)
 
-    # Abilities
+    # Moves
     row = 3
     column = 0
-    for i in range(0, len(card.abilities)):
-        ability = card.get_ability(card.abilities[i])
+    for i in range(0, len(card.moves)):
 
-        bullet_point = PhotoImage(file="data/images/icon-" + ability[0] + ".png").subsample(40, 40)
+        bullet_point = PhotoImage(file="data/images/icon-" + card.moves[i].category + ".png").subsample(40, 40)
         bullet_point_label = Label(profile, image=bullet_point)
         bullet_point_label.grid(row=row, column=column)
         bullet_point_label.image = bullet_point
-        Label(profile, text=ability[1], font=font_medium).grid(row=row, column=column+1, columnspan=4)
-        Label(profile, text=ability[2], font=font_medium).grid(row=row, column=column+5)
-        Label(profile, text=ability[3], font=font_extra_small).grid(row=row+1, column=column, columnspan=6)
+        Label(profile, text=card.moves[i].title, font=font_medium).grid(row=row, column=column+1, columnspan=4)
+        Label(profile, text=card.moves[i].cost, font=font_medium).grid(row=row, column=column+5)
+        Label(profile, text=card.moves[i].description, font=font_extra_small).grid(row=row+1, column=column, columnspan=6)
         row += 2
 
 
