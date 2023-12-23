@@ -1,5 +1,7 @@
-import tkinter
+#import tkinter
 from random import choice
+from tkinter import Tk, Label, Button, Toplevel, PhotoImage, Image, HORIZONTAL, EW
+from tkinter.ttk import Separator
 
 import battle
 from classes.card import Card
@@ -74,48 +76,48 @@ def load_cards():
 # Display card screen
 # visually displays 'card'
 def display_card(master, card):
-    profile = tkinter.Toplevel(master)
+    profile = Toplevel(master)
     profile.title(card.name)
 
     # Nation icon
-    nation_icon = tkinter.PhotoImage(file="data/images/icon-" + card.nation + ".png").subsample(30, 30)
-    nation_icon_label = tkinter.Label(profile, image=nation_icon)
+    nation_icon = PhotoImage(file="data/images/icon-" + card.nation + ".png").subsample(30, 30)
+    nation_icon_label = Label(profile, image=nation_icon)
     nation_icon_label.image = nation_icon
     nation_icon_label.grid(row=0, column=0)
 
     # Card name
-    name_label = tkinter.Label(profile, text=card.name, font=font_medium)
+    name_label = Label(profile, text=card.name, font=font_medium)
     name_label.grid(row=0, column=1, columnspan=4)
 
     # Card level
-    tkinter.Label(profile, text="Level: " + str(card.level), font=font_small).grid(row=0, column=5)
+    Label(profile, text="Level: " + str(card.level), font=font_small).grid(row=0, column=5)
 
     # Card image
-    card_image = tkinter.PhotoImage(file="data/images/" + card.card_id + ".png").subsample(3, 3)
-    card_image_label = tkinter.Label(profile, image=card_image)
+    card_image = PhotoImage(file="data/images/" + card.card_id + ".png").subsample(3, 3)
+    card_image_label = Label(profile, image=card_image)
     card_image_label.image = card_image  # keep image in memory
     card_image_label.grid(row=1, column=0, columnspan=6)
 
     # Health stat
-    health_icon = tkinter.PhotoImage(file="data/images/icon-health.png").subsample(30, 30)
-    health_icon_label = tkinter.Label(profile, image=health_icon, font=font_small)
+    health_icon = PhotoImage(file="data/images/icon-health.png").subsample(30, 30)
+    health_icon_label = Label(profile, image=health_icon, font=font_small)
     health_icon_label.image = health_icon
     health_icon_label.grid(row=2, column=0)
-    tkinter.Label(profile, text=str(card.health)).grid(row=2, column=1)
+    Label(profile, text=str(card.health)).grid(row=2, column=1)
 
     # Attack stat
-    attack_icon = tkinter.PhotoImage(file="data/images/icon-attack.png").subsample(30, 30)
-    attack_icon_label = tkinter.Label(profile, image=attack_icon, font=font_small)
+    attack_icon = PhotoImage(file="data/images/icon-attack.png").subsample(30, 30)
+    attack_icon_label = Label(profile, image=attack_icon, font=font_small)
     attack_icon_label.image = attack_icon
     attack_icon_label.grid(row=2, column=2)
-    tkinter.Label(profile, text=str(card.power)).grid(row=2, column=3)
+    Label(profile, text=str(card.power)).grid(row=2, column=3)
 
     # Defence stat
-    defence_icon = tkinter.PhotoImage(file="data/images/icon-defence.png").subsample(30, 30)
-    defence_icon_label = tkinter.Label(profile, image=defence_icon, font=font_small)
+    defence_icon = PhotoImage(file="data/images/icon-defence.png").subsample(30, 30)
+    defence_icon_label = Label(profile, image=defence_icon, font=font_small)
     defence_icon_label.image = defence_icon
     defence_icon_label.grid(row=2, column=4)
-    tkinter.Label(profile, text=str(card.defence)).grid(row=2, column=5)
+    Label(profile, text=str(card.defence)).grid(row=2, column=5)
 
     # Abilities
     row = 3
@@ -123,13 +125,13 @@ def display_card(master, card):
     for i in range(0, len(card.abilities)):
         ability = card.get_ability(card.abilities[i])
 
-        bullet_point = tkinter.PhotoImage(file="data/images/icon-" + ability[0] + ".png").subsample(40, 40)
-        bullet_point_label = tkinter.Label(profile, image=bullet_point)
+        bullet_point = PhotoImage(file="data/images/icon-" + ability[0] + ".png").subsample(40, 40)
+        bullet_point_label = Label(profile, image=bullet_point)
         bullet_point_label.grid(row=row, column=column)
         bullet_point_label.image = bullet_point
-        tkinter.Label(profile, text=ability[1], font=font_medium).grid(row=row, column=column+1, columnspan=4)
-        tkinter.Label(profile, text=ability[2], font=font_medium).grid(row=row, column=column+5)
-        tkinter.Label(profile, text=ability[3], font=font_extra_small).grid(row=row+1, column=column, columnspan=6)
+        Label(profile, text=ability[1], font=font_medium).grid(row=row, column=column+1, columnspan=4)
+        Label(profile, text=ability[2], font=font_medium).grid(row=row, column=column+5)
+        Label(profile, text=ability[3], font=font_extra_small).grid(row=row+1, column=column, columnspan=6)
         row += 2
 
 
@@ -137,25 +139,28 @@ def display_card(master, card):
 # displays all existing card titles and images
 # allows the user to view the full cards by pressing the buttons underneath the images
 def card_catalogue(master, cards):
-    catalogue = tkinter.Toplevel(master)
+    catalogue = Toplevel(master)
     catalogue.title("SaintsBePraised - Card Catalogue")
 
     row = 0
     column = 0
     for i in range(0, len(cards)):
+        if column == 0:
+            Separator(catalogue, orient=HORIZONTAL).grid(row=row, column=column, columnspan=6, sticky=EW)
+            row += 1
         card = cards[i]
 
         # Name
-        tkinter.Label(catalogue, text=card.name, font=font_medium).grid(row=row, column=column)
+        Label(catalogue, text=card.name, font=font_medium).grid(row=row, column=column, padx=(5, 5))
 
         # Card image
-        card_image = tkinter.PhotoImage(file="data/images/" + card.card_id + ".png").subsample(10, 10)
-        card_image_label = tkinter.Label(catalogue, image=card_image)
+        card_image = PhotoImage(file="data/images/" + card.card_id + ".png").subsample(10, 10)
+        card_image_label = Label(catalogue, image=card_image)
         card_image_label.image = card_image  # keep image in memory
         card_image_label.grid(row=row+1, column=column)
 
         # View button
-        tkinter.Button(catalogue, text="View", font=font_small, command=lambda this_card=card: display_card(catalogue, this_card)).grid(row=row+2, column=column, pady=(2, 5))
+        Button(catalogue, text="View", font=font_small, command=lambda this_card=card: display_card(catalogue, this_card)).grid(row=row+2, column=column, pady=(2, 5))
 
         if column == 5:
             column = 0
@@ -179,8 +184,8 @@ def random_battle(master, cards):
 
 # Main function
 def main():
-    root = tkinter.Tk()
-    root.winfo_toplevel().iconphoto(True, tkinter.Image("photo", file="data/images/icon-all.png"))
+    root = Tk()
+    root.winfo_toplevel().iconphoto(True, Image("photo", file="data/images/icon-all.png"))
     root.geometry("405x405")
     root.title("Saints Be Praised - Demo")
 
@@ -188,14 +193,14 @@ def main():
     cards = load_cards()
 
     # Title image
-    title_image = tkinter.PhotoImage(file="data/images/splash.png").subsample(8, 8)
-    title_image_label = tkinter.Label(root, image=title_image)
+    title_image = PhotoImage(file="data/images/splash.png").subsample(8, 8)
+    title_image_label = Label(root, image=title_image)
     title_image_label.image = title_image  # keep image in memory
     title_image_label.pack()
 
     # Buttons
-    tkinter.Button(root, text="Card Catalogue", font=font_medium, command=lambda: card_catalogue(root, cards)).pack()
-    tkinter.Button(root, text="Random Battle", font=font_medium, command=lambda: random_battle(root, cards)).pack()
+    Button(root, text="Card Catalogue", font=font_medium, command=lambda: card_catalogue(root, cards)).pack()
+    Button(root, text="Random Battle", font=font_medium, command=lambda: random_battle(root, cards)).pack()
 
     root.mainloop()
 
