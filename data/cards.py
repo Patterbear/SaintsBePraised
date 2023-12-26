@@ -33,3 +33,9 @@ horsemen = {
     "horseman-famine": ["Famine", "horseman", 50, 500, 70, 80, []],
     "horseman-death": ["Death", "horseman", 50, 500, 100, 100, []],
 }
+
+# I know St. Michael is both. Multiple categories will be allowed
+angels = {
+    "angel-cherubim": ["Cherubim", "all", 40, 400, 60, 60,[]],
+    #"angel-throne": ["Throne", "angel", 40, 400, 60, 60,[]],
+}

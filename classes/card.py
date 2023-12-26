@@ -49,4 +49,4 @@ class Card(object):
             self.health = self.max_health
 
     def __str__(self):
-        return self.card_id + ": [ Name: " + self.name + ", Nation: " + self.nation + ", Level: " + str(self.level) + ", Health: " + str(self.health) + ", Attack/Defence: " + str(self.power) + "/" + str(self.defence) + " ]"
+        return self.card_id + ": [ Name: " + self.name + ", Nation: " + self.nation + ", Level: " + str(self.level) + ", Health: " + str(self.max_health) + ", Attack/Defence: " + str(self.power) + "/" + str(self.defence) + " ]"

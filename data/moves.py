@@ -22,7 +22,7 @@ moves = {
 # Produces a move object from move ID
 def get_move(move_id):
     move = moves.get(move_id)
-    return Move(move_id, move[0], move[1], move[2], move[3], move[4])
+    return Move(move_id, move[0], move[1], move[2], move[3], move[4], move[5])
 
 """
 "dragon-slayer": ["Dragon Slayer", 80, "Attack increases by 30 and enemy defence is ignored.", 0, 30, 0, ["attack-increase," "ignore-defence"], 50],

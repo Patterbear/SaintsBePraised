@@ -4,7 +4,7 @@ from tkinter.ttk import Separator
 
 import battle
 from classes.card import Card
-from data.cards import saints, knights, divines, demons, horsemen
+from data.cards import saints, knights, divines, demons, horsemen, angels
 
 # Game fonts
 from data.moves import get_move
@@ -67,6 +67,10 @@ def load_cards():
     horsemen_list = create_cards_from_list(horsemen)
     for i in range(0, len(horsemen_list)):
         loaded_cards.append(horsemen_list[i])
+
+    angels_list = create_cards_from_list(angels)
+    for i in range(0, len(angels_list)):
+        loaded_cards.append(angels_list[i])
 
     # Set all card moves to the basic ones
     loaded_cards = set_moves_to_basic(loaded_cards)
@@ -162,7 +166,7 @@ def card_catalogue(master, cards):
         # View button
         Button(catalogue, text="View", font=font_small, command=lambda this_card=card: display_card(catalogue, this_card)).grid(row=row+2, column=column, pady=(2, 5))
 
-        if column == 5:
+        if column == 6:
             column = 0
             row = row + 3
         else:
@@ -176,8 +180,8 @@ def random_battle(master, cards):
     card2 = choice(cards)
 
     # displays battling cards
-    display_card(master, card1)
-    display_card(master, card2)
+    #display_card(master, card1)
+    #display_card(master, card2)
 
     battle.auto_battle(card1, card2)
 

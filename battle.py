@@ -38,3 +38,6 @@ def auto_battle(card_1, card_2):
 
         turns -= 1
 
+
+def battle(root, card_1, card_2):
+    return
