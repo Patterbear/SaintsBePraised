@@ -1,3 +1,4 @@
+from os.path import exists
 from random import choice
 from tkinter import Tk, Label, Button, Toplevel, PhotoImage, Image, HORIZONTAL, EW
 from tkinter.ttk import Separator
@@ -186,18 +187,41 @@ def random_battle(master, cards):
     battle.auto_battle(card1, card2)
 
 
+# Sprite test screen
+# displays all sprites
+def sprite_test(master, cards):
+    sprites = Toplevel(master)
+    sprites.title("SaintsBePraised - Sprite Test")
+
+    column = 0
+    row = 0
+
+    for i in range(0, len(cards)):
+        if exists("data/images/" + cards[i].card_id + "-sprite.png"):
+            image = PhotoImage(file="data/images/" + cards[i].card_id + "-sprite.png").subsample(3, 3)
+            image_label = Label(sprites, image=image)
+            image_label.image = image  # keep image in memory
+            image_label.grid(row=row, column=column)
+
+            if column == 4:
+                column = 0
+                row += 1
+            else:
+                column += 1
+
+
 # Main function
 def main():
     root = Tk()
     root.winfo_toplevel().iconphoto(True, Image("photo", file="data/images/icon-all.png"))
-    root.geometry("405x405")
+    root.geometry("500x450")
     root.title("Saints Be Praised - Demo")
 
     # Load cards from file
     cards = load_cards()
 
     # Title image
-    title_image = PhotoImage(file="data/images/splash.png").subsample(8, 8)
+    title_image = PhotoImage(file="data/images/titles.png").subsample(8, 8)
     title_image_label = Label(root, image=title_image)
     title_image_label.image = title_image  # keep image in memory
     title_image_label.pack()
@@ -205,6 +229,8 @@ def main():
     # Buttons
     Button(root, text="Card Catalogue", font=font_medium, command=lambda: card_catalogue(root, cards)).pack()
     Button(root, text="Random Battle", font=font_medium, command=lambda: random_battle(root, cards)).pack()
+    Button(root, text="Sprite Test", font=font_medium, command=lambda: sprite_test(root, cards)).pack()
+
 
     root.mainloop()
 
