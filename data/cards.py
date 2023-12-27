@@ -10,6 +10,10 @@ saints = {
 }
 
 knights = {
+    "knight-player": ["Knight", "nowhere", 5, 75, 15, 15, []],
+    "knight-rival": ["Knight Rival", "nowhere", 5, 50, 10, 10, []],
+    "knight-trainer": ["Knight Trainer", "nowhere", 5, 30, 10, 10, []],
+    "knight-veteran": ["Knight Veteran", "nowhere", 8, 40, 15, 15, ["veteran-strike"]],
     "knight-of-england": ["Knight of England", "england", 10, 100, 25, 25, ["warrior-of-god", "for-nation", "healing-prayer"]],
     "knight-of-scotland": ["Knight of Scotland", "scotland", 10, 100, 25, 25, ["warrior-of-god", "for-nation", "healing-prayer"]],
     "knight-of-wales": ["Knight of Wales", "wales", 10, 100, 25, 25, ["warrior-of-god", "for-nation", "healing-prayer"]],

@@ -151,7 +151,7 @@ def card_catalogue(master, cards):
     column = 0
     for i in range(0, len(cards)):
         if column == 0:
-            Separator(catalogue, orient=HORIZONTAL).grid(row=row, column=column, columnspan=6, sticky=EW)
+            #Separator(catalogue, orient=HORIZONTAL).grid(row=row, column=column, columnspan=6, sticky=EW)
             row += 1
         card = cards[i]
 
@@ -184,8 +184,9 @@ def random_battle(master, cards):
     #display_card(master, card1)
     #display_card(master, card2)
 
-    battle.auto_battle(card1, card2)
-
+    #battle.auto_battle(card1, card2)
+    master.destroy()
+    battle.battle(card1, card2)
 
 # Sprite test screen
 # displays all sprites
@@ -203,7 +204,7 @@ def sprite_test(master, cards):
             image_label.image = image  # keep image in memory
             image_label.grid(row=row, column=column)
 
-            if column == 7:
+            if column == 5:
                 column = 0
                 row += 1
             else:
