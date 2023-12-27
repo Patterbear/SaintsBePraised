@@ -198,12 +198,12 @@ def sprite_test(master, cards):
 
     for i in range(0, len(cards)):
         if exists("data/images/" + cards[i].card_id + "-sprite.png"):
-            image = PhotoImage(file="data/images/" + cards[i].card_id + "-sprite.png").subsample(3, 3)
+            image = PhotoImage(file="data/images/" + cards[i].card_id + "-sprite.png").subsample(5, 5)
             image_label = Label(sprites, image=image)
             image_label.image = image  # keep image in memory
             image_label.grid(row=row, column=column)
 
-            if column == 4:
+            if column == 7:
                 column = 0
                 row += 1
             else:
