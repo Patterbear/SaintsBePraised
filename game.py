@@ -1,11 +1,10 @@
 from os.path import exists
 from random import choice
-from tkinter import Tk, Label, Button, Toplevel, PhotoImage, Image, HORIZONTAL, EW
-from tkinter.ttk import Separator
+from tkinter import Tk, Label, Button, Toplevel, PhotoImage, Image
 
 import battle
 from classes.card import Card
-from data.cards import saints, knights, divines, demons, horsemen, angels
+from data.cards import saints, knights, divines, demons, horsemen, angels, others
 
 # Game fonts
 from data.moves import get_move
@@ -72,6 +71,11 @@ def load_cards():
     angels_list = create_cards_from_list(angels)
     for i in range(0, len(angels_list)):
         loaded_cards.append(angels_list[i])
+
+    # Append other objects
+    others_list = create_cards_from_list(others)
+    for i in range(0, len(others_list)):
+        loaded_cards.append(others_list[i])
 
     # Set all card moves to the basic ones
     loaded_cards = set_moves_to_basic(loaded_cards)
@@ -159,7 +163,7 @@ def card_catalogue(master, cards):
         Label(catalogue, text=card.name, font=font_medium).grid(row=row, column=column, padx=(5, 5))
 
         # Card image
-        card_image = PhotoImage(file="data/images/" + card.card_id + ".png").subsample(10, 10)
+        card_image = PhotoImage(file="data/images/" + card.card_id + ".png").subsample(12, 12)
         card_image_label = Label(catalogue, image=card_image)
         card_image_label.image = card_image  # keep image in memory
         card_image_label.grid(row=row+1, column=column)

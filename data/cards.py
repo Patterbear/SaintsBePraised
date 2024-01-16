@@ -43,3 +43,8 @@ angels = {
     "angel-cherubim": ["Cherubim", "all", 40, 400, 60, 60,[]],
     #"angel-throne": ["Throne", "angel", 40, 400, 60, 60,[]],
 }
+
+# Temporary category
+others = {
+    "moses": ["Moses", "all", 80, 800, 90, 90, []],
+}
