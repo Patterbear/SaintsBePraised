@@ -181,15 +181,10 @@ def card_catalogue(master, cards):
 # Random battle
 # sets up an auto battle between to randomly selected cards
 def random_battle(master, cards):
+    master.destroy()
+
     card1 = choice(cards)
     card2 = choice(cards)
-
-    # displays battling cards
-    #display_card(master, card1)
-    #display_card(master, card2)
-
-    #battle.auto_battle(card1, card2)
-    master.destroy()
     battle.battle(card1, card2)
 
 # Sprite test screen
@@ -208,7 +203,7 @@ def sprite_test(master, cards):
             image_label.image = image  # keep image in memory
             image_label.grid(row=row, column=column)
 
-            if column == 5:
+            if column == 6:
                 column = 0
                 row += 1
             else:
