@@ -8,6 +8,8 @@ from data.cards import saints, knights, divines, demons, horsemen, angels, other
 
 # Game fonts
 from data.moves import get_move
+from winsound import PlaySound, SND_ASYNC
+
 
 font_large = "Helvetica 20"
 font_medium = "Helvetica 15"
@@ -185,7 +187,9 @@ def random_battle(master, cards):
 
     card1 = choice(cards)
     card2 = choice(cards)
+    PlaySound('data/sounds/battle.wav', SND_ASYNC)
     battle.battle(card1, card2)
+
 
 # Sprite test screen
 # displays all sprites
