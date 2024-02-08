@@ -2,9 +2,22 @@ from tkinter import Tk, Frame, Label, Canvas, E, PhotoImage, Button, NW
 
 # Executes attackers chosen move
 from tkinter.scrolledtext import ScrolledText
-from turtle import RawTurtle
+from turtle import RawTurtle, TurtleScreen
+
+from classes.move import Move
+from data.moves import get_move
 from game import font_large, font_medium
 
+
+def screen_size(root):
+    return str(root.winfo_screenwidth()) + "x" + str(root.winfo_screenheight())
+
+
+def attack(attacker, defender, healthbar):
+    attacker.next_move = get_move("attack0")
+    attacker.attack(defender)
+    print(int((defender.health / defender.max_health) * 100))
+    draw_healthbar(healthbar, int((defender.health / defender.max_health) * 100))
 
 def execute_move(attacker, defender):
     move = attacker.next_move
@@ -45,19 +58,29 @@ def auto_battle(card_1, card_2):
 
 # Update healthbar function
 def draw_healthbar(healthbar, percentage):
-    healthbar.delete('all')
+    healthbar.tracer(0, 0)
     turtle = RawTurtle(healthbar)
+    turtle.hideturtle()
+    turtle.width(15)
     turtle.penup()
+
+    # Fill health bar
     turtle.goto(-150, 0)
     turtle.color('red')
-    turtle.width(15)
     turtle.pendown()
-    turtle.forward((percentage * 0.01) * 300)
+    turtle.forward(300)
+
+    # Remove health
+    turtle.color('white')
+    turtle.back(300 * ((100 - percentage) * 0.01))
+
+    healthbar.update()
 
 
 def battle(card_1, card_2):
     battle_screen = Tk()
     battle_screen.title("Saints Be Praised - Battle")
+    battle_screen.geometry(screen_size(battle_screen))
 
     # Canvas
     canvas = Canvas(battle_screen, width=1024, height=1024)
@@ -74,7 +97,7 @@ def battle(card_1, card_2):
 
     # Card 1 status widget
     card_1_status_frame = Frame(battle_screen)
-    card_1_status_frame.place(x=20, y=225)
+    card_1_status_frame.place(x=170, y=225)
 
     # Name and health labels
     Label(card_1_status_frame, text=card_1.name, font=font_large).grid(row=0, column=0, columnspan=3)
@@ -87,9 +110,9 @@ def battle(card_1, card_2):
 
     #  Health bar
     card_1_healthbar = Canvas(card_1_status_frame, height=20, width=300)
-    card_1_healthbar.config(background="White")
     card_1_healthbar.grid(row=1, column=1, columnspan=4)
-    draw_healthbar(card_1_healthbar, 100)
+    card_1_healthbar_ts = TurtleScreen(card_1_healthbar)
+    draw_healthbar(card_1_healthbar_ts, 100)
 
     # Level label
     Label(card_1_status_frame, text="Level " + str(card_1.level), font=font_medium).grid(row=0, column=4, sticky=E)
@@ -101,7 +124,7 @@ def battle(card_1, card_2):
 
     # Card 2 (opponent) status widget
     card_2_status_frame = Frame(battle_screen)
-    card_2_status_frame.place(x=610, y=20)
+    card_2_status_frame.place(x=790, y=20)
 
     # Name and health labels
     Label(card_2_status_frame, text=card_2.name, font=font_large).grid(row=0, column=0, columnspan=3)
@@ -114,24 +137,24 @@ def battle(card_1, card_2):
 
     #  Health bar
     card_2_healthbar = Canvas(card_2_status_frame, height=20, width=300)
-    card_2_healthbar.config(background="White")
     card_2_healthbar.grid(row=1, column=1, columnspan=4)
-    draw_healthbar(card_2_healthbar, 50)
+    card_2_healthbar_ts = TurtleScreen(card_2_healthbar)
+    draw_healthbar(card_2_healthbar_ts, 100)
 
     # Level label
     Label(card_2_status_frame, text="Level " + str(card_2.level), font=font_medium).grid(row=0, column=4, sticky=E)
 
     # Combat log
     combat_log = ScrolledText(battle_screen, width=30, height=6, font=font_medium)
-    combat_log.place(x=400, y=475)
+    combat_log.place(x=460, y=475)
 
     # Player buttons
-    attack_button = Button(battle_screen, text="Attack", font=font_large)
-    attack_button.place(x=790, y=475)
+    attack_button = Button(battle_screen, text="Attack", font=font_large, command=lambda: attack(card_1, card_2, card_2_healthbar_ts))
+    attack_button.place(x=850, y=475)
     defend_button = Button(battle_screen, text="Defend", font=font_large)
-    defend_button.place(x=910, y=475)
+    defend_button.place(x=970, y=475)
     heal_button = Button(battle_screen, text="Heal", font=font_large)
-    heal_button.place(x=860, y=575)
+    heal_button.place(x=920, y=575)
 
     canvas.pack()
 

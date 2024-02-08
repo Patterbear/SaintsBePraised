@@ -26,15 +26,17 @@ class Card(object):
 
     # Attack function
     def attack(self, other_card):
-        damage = (int((self.power * 0.5) + self.next_move.strength))
+        damage = (int((self.power * 0.25) + self.next_move.strength))
         defended = int(other_card.defence * 0.25)
+
+        print(defended)
 
         # prevents too much defence causing healing
         if defended > damage:
-            damage = 0
-        else:
-            damage = damage - defended
+            damage = self.next_move.strength
         other_card.health -= damage
+
+        print(damage)
 
     # Defend function
     def defend(self):
