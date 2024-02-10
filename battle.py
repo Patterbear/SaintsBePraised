@@ -4,7 +4,6 @@ from tkinter import Tk, Frame, Label, Canvas, E, PhotoImage, Button, NW
 from tkinter.scrolledtext import ScrolledText
 from turtle import RawTurtle, TurtleScreen
 
-from classes.move import Move
 from data.moves import get_move
 from game import font_large, font_medium
 
@@ -13,11 +12,23 @@ def screen_size(root):
     return str(root.winfo_screenwidth()) + "x" + str(root.winfo_screenheight())
 
 
+# Attack function
+# calls the attacking card's 'attack' function on the defending card
+# updates the defender's health bar
 def attack(attacker, defender, healthbar):
     attacker.next_move = get_move("attack0")
     attacker.attack(defender)
-    print(int((defender.health / defender.max_health) * 100))
     draw_healthbar(healthbar, int((defender.health / defender.max_health) * 100))
+
+
+# Heal function
+# calls the healer card's 'heal' function
+# updates the healer's health bar
+def heal(healer, healthbar):
+    healer.next_move = get_move("heal0")
+    healer.heal()
+    draw_healthbar(healthbar, int((healer.health / healer.max_health) * 100))
+
 
 def execute_move(attacker, defender):
     move = attacker.next_move
@@ -63,6 +74,7 @@ def draw_healthbar(healthbar, percentage):
     turtle.hideturtle()
     turtle.width(15)
     turtle.penup()
+
 
     # Fill health bar
     turtle.goto(-150, 0)
@@ -153,7 +165,7 @@ def battle(card_1, card_2):
     attack_button.place(x=850, y=475)
     defend_button = Button(battle_screen, text="Defend", font=font_large)
     defend_button.place(x=970, y=475)
-    heal_button = Button(battle_screen, text="Heal", font=font_large)
+    heal_button = Button(battle_screen, text="Heal", font=font_large, command=lambda: heal(card_2, card_2_healthbar_ts))
     heal_button.place(x=920, y=575)
 
     canvas.pack()
