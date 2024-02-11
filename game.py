@@ -17,6 +17,25 @@ font_small = "Helvetica 10"
 font_extra_small = "Helvetica 8"
 
 
+# Get Screen Size function
+# returns current screen resolution
+def screen_size(root):
+    return str(root.winfo_screenwidth()) + "x" + str(root.winfo_screenheight())
+
+
+# Divide cards by type function
+# returns a dictionary of cards divided by type
+def divide_by_type(cards):
+    types = {}
+
+    for card in cards:
+        if card.type not in types.keys():
+            types[card.type] = []
+        types.get(card.type).append(card)
+
+    return types
+
+
 # Create card objects from list function
 # creates a list of 'Card' objects based on data extracted from 'cards.py'
 def create_cards_from_list(card_list):
@@ -27,7 +46,7 @@ def create_cards_from_list(card_list):
         card_raw = card_list.get(card_list_keys[i])
         created_cards.append(
             Card(card_list_keys[i], card_raw[0], card_raw[1], card_raw[2], card_raw[3], card_raw[4], card_raw[5],
-                 card_raw[6]))
+                 card_raw[6], card_raw[7]))
 
     return created_cards
 
@@ -92,7 +111,7 @@ def display_card(master, card):
     profile.title(card.name)
 
     # Nation icon
-    nation_icon = PhotoImage(file="data/images/icon-" + card.nation + ".png").subsample(30, 30)
+    nation_icon = PhotoImage(file="data/images/icons/icon-" + card.nation + ".png").subsample(30, 30)
     nation_icon_label = Label(profile, image=nation_icon)
     nation_icon_label.image = nation_icon
     nation_icon_label.grid(row=0, column=0)
@@ -105,27 +124,27 @@ def display_card(master, card):
     Label(profile, text="Level: " + str(card.level), font=font_small).grid(row=0, column=5)
 
     # Card image
-    card_image = PhotoImage(file="data/images/" + card.card_id + ".png").subsample(3, 3)
+    card_image = PhotoImage(file="data/images/card/" + card.card_id + ".png").subsample(3, 3)
     card_image_label = Label(profile, image=card_image)
     card_image_label.image = card_image  # keep image in memory
     card_image_label.grid(row=1, column=0, columnspan=6)
 
     # Health stat
-    health_icon = PhotoImage(file="data/images/icon-health.png").subsample(30, 30)
+    health_icon = PhotoImage(file="data/images/icons/icon-health.png").subsample(30, 30)
     health_icon_label = Label(profile, image=health_icon, font=font_small)
     health_icon_label.image = health_icon
     health_icon_label.grid(row=2, column=0)
     Label(profile, text=str(card.health)).grid(row=2, column=1)
 
     # Attack stat
-    attack_icon = PhotoImage(file="data/images/icon-attack.png").subsample(30, 30)
+    attack_icon = PhotoImage(file="data/images/icons/icon-attack.png").subsample(30, 30)
     attack_icon_label = Label(profile, image=attack_icon, font=font_small)
     attack_icon_label.image = attack_icon
     attack_icon_label.grid(row=2, column=2)
     Label(profile, text=str(card.power)).grid(row=2, column=3)
 
     # Defence stat
-    defence_icon = PhotoImage(file="data/images/icon-defence.png").subsample(30, 30)
+    defence_icon = PhotoImage(file="data/images/icons/icon-defence.png").subsample(30, 30)
     defence_icon_label = Label(profile, image=defence_icon, font=font_small)
     defence_icon_label.image = defence_icon
     defence_icon_label.grid(row=2, column=4)
@@ -136,7 +155,7 @@ def display_card(master, card):
     column = 0
     for i in range(0, len(card.moves)):
 
-        bullet_point = PhotoImage(file="data/images/icon-" + card.moves[i].category + ".png").subsample(40, 40)
+        bullet_point = PhotoImage(file="data/images/icons/icon-" + card.moves[i].category + ".png").subsample(40, 40)
         bullet_point_label = Label(profile, image=bullet_point)
         bullet_point_label.grid(row=row, column=column)
         bullet_point_label.image = bullet_point
@@ -165,7 +184,7 @@ def card_catalogue(master, cards):
         Label(catalogue, text=card.name, font=font_medium).grid(row=row, column=column, padx=(5, 5))
 
         # Card image
-        card_image = PhotoImage(file="data/images/" + card.card_id + ".png").subsample(12, 12)
+        card_image = PhotoImage(file="data/images/card/" + card.card_id + ".png").subsample(12, 12)
         card_image_label = Label(catalogue, image=card_image)
         card_image_label.image = card_image  # keep image in memory
         card_image_label.grid(row=row+1, column=column)
@@ -189,6 +208,38 @@ def random_battle(master, cards):
     card2 = choice(cards)
     PlaySound('data/sounds/battle.wav', SND_ASYNC)
     battle.battle(card1, card2)
+
+
+# Battle selection screen
+# allows player to choose cards to fight
+def select_battle(master, cards):
+    cards_by_type = divide_by_type(cards)
+    types = list(cards_by_type.keys())
+
+    card_1 = choice(cards)
+    card_2 = choice(cards)
+
+    battle_selection = Toplevel(master)
+    battle_selection.title("Saints Be Paised - Battle Selection")
+    battle_selection.geometry(screen_size(master))
+
+    # Title
+    Label(battle_selection, text="Select Battle", font=font_large).grid(row=0, column=0, columnspan=13)
+
+    # Class selectors
+    player_class_back = Button(battle_selection, text="<", font=font_small)
+    player_class_back.grid(row=1, column=1)
+    player_class = Label(battle_selection, text=card_1.type.capitalize(), font=font_medium)
+    player_class.grid(row=1, column=2)
+    player_class_forward = Button(battle_selection, text=">", font=font_small)
+    player_class_forward.grid(row=1, column=3)
+
+    opponent_class_back = Button(battle_selection, text="<", font=font_small)
+    opponent_class_back.grid(row=1, column=9)
+    opponent_class = Label(battle_selection, text=card_2.type.capitalize(), font=font_medium)
+    opponent_class.grid(row=1, column=10)
+    opponent_class_forward = Button(battle_selection, text=">", font=font_small)
+    opponent_class_forward.grid(row=1, column=11)
 
 
 # Sprite test screen
@@ -217,8 +268,8 @@ def sprite_test(master, cards):
 # Main function
 def main():
     root = Tk()
-    root.winfo_toplevel().iconphoto(True, Image("photo", file="data/images/icon-all.png"))
-    root.geometry("500x450")
+    root.winfo_toplevel().iconphoto(True, Image("photo", file="data/images/icons/icon-all.png"))
+    root.geometry("500x500")
     root.title("Saints Be Praised - Demo")
 
     # Load cards from file
@@ -232,9 +283,9 @@ def main():
 
     # Buttons
     Button(root, text="Card Catalogue", font=font_medium, command=lambda: card_catalogue(root, cards)).pack()
+    Button(root, text="Select Battle", font=font_medium, command=lambda: select_battle(root, cards)).pack()
     Button(root, text="Random Battle", font=font_medium, command=lambda: random_battle(root, cards)).pack()
     Button(root, text="Sprite Test", font=font_medium, command=lambda: sprite_test(root, cards)).pack()
-
 
     root.mainloop()
 

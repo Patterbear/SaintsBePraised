@@ -5,11 +5,7 @@ from tkinter.scrolledtext import ScrolledText
 from turtle import RawTurtle, TurtleScreen
 
 from data.moves import get_move
-from game import font_large, font_medium
-
-
-def screen_size(root):
-    return str(root.winfo_screenwidth()) + "x" + str(root.winfo_screenheight())
+from game import font_large, font_medium, screen_size
 
 
 # Attack function
@@ -98,7 +94,7 @@ def battle(card_1, card_2):
     canvas = Canvas(battle_screen, width=1024, height=1024)
 
     # Background image
-    background_image = PhotoImage(file="data/images/hell1.png")
+    background_image = PhotoImage(file="data/images/backgrounds/hell1.png")
     canvas.create_image(10, 10, image=background_image, anchor=NW)
     canvas.background_image = background_image
 
@@ -115,7 +111,7 @@ def battle(card_1, card_2):
     Label(card_1_status_frame, text=card_1.name, font=font_large).grid(row=0, column=0, columnspan=3)
 
     # Health icon
-    health_icon = PhotoImage(file="data/images/icon-health.png").subsample(50, 50)
+    health_icon = PhotoImage(file="data/images/icons/icon-health.png").subsample(50, 50)
     health_icon_label = Label(card_1_status_frame, image=health_icon)
     health_icon_label.image = health_icon
     health_icon_label.grid(row=1, column=0)
@@ -142,7 +138,7 @@ def battle(card_1, card_2):
     Label(card_2_status_frame, text=card_2.name, font=font_large).grid(row=0, column=0, columnspan=3)
 
     # Health icon
-    health_icon = PhotoImage(file="data/images/icon-health.png").subsample(50, 50)
+    health_icon = PhotoImage(file="data/images/icons/icon-health.png").subsample(50, 50)
     health_icon_label = Label(card_2_status_frame, image=health_icon)
     health_icon_label.image = health_icon
     health_icon_label.grid(row=1, column=0)

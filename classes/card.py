@@ -3,8 +3,9 @@ from random import choice
 
 # Card class
 class Card(object):
-    def __init__(self, card_id, name, nation, level, health, power, defence, moves):
+    def __init__(self, card_id, type, name, nation, level, health, power, defence, moves):
         self.card_id = card_id
+        self.type = type
         self.name = name
         self.nation = nation
         self.level = level
