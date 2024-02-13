@@ -284,6 +284,8 @@ def select_battle(master, cards):
     opponent_canvas.create_image(170, 221, image=opponent_sprite)
     opponent_canvas.opponent_sprite = opponent_sprite
 
+    battle_selection.mainloop()
+
 
 # Sprite test screen
 # displays all sprites
