@@ -268,15 +268,15 @@ def sprite_test(master, cards):
 # Main function
 def main():
     root = Tk()
-    root.winfo_toplevel().iconphoto(True, Image("photo", file="data/images/icons/icon-all.png"))
-    root.geometry("500x500")
+    root.winfo_toplevel().iconphoto(True, Image("photo", file="data/images/logo.png"))
+    root.geometry("500x550")
     root.title("Saints Be Praised - Demo")
 
     # Load cards from file
     cards = load_cards()
 
     # Title image
-    title_image = PhotoImage(file="data/images/titles.png").subsample(8, 8)
+    title_image = PhotoImage(file="data/images/logo.png").subsample(7, 7)
     title_image_label = Label(root, image=title_image)
     title_image_label.image = title_image  # keep image in memory
     title_image_label.pack()
