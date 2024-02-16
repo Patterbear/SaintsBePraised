@@ -3,6 +3,7 @@ from random import choice, randint
 from tkinter import Tk, Label, Button, Toplevel, PhotoImage, Image, Canvas, NW
 
 import battle
+from battle_select import battle_select
 from classes.card import Card
 from data.cards import saints, knights, divines, demons, horsemen, angels, others
 
@@ -21,19 +22,6 @@ font_extra_small = "Helvetica 8"
 # returns current screen resolution
 def screen_size(root):
     return str(root.winfo_screenwidth()) + "x" + str(root.winfo_screenheight())
-
-
-# Divide cards by type function
-# returns a dictionary of cards divided by type
-def divide_by_type(cards):
-    types = {}
-
-    for card in cards:
-        if card.type not in types.keys():
-            types[card.type] = []
-        types.get(card.type).append(card)
-
-    return types
 
 
 # Create card objects from list function
@@ -210,83 +198,6 @@ def random_battle(master, cards):
     battle.battle(card1, card2)
 
 
-# Battle selection screen
-# allows player to choose cards to fight
-def select_battle(master, cards):
-    master.destroy()
-    cards_by_type = divide_by_type(cards)
-    types = list(cards_by_type.keys())
-
-    player_type = randint(0, len(types) - 1)
-    opponent_type = randint(0, len(types) - 1)
-
-    player_number = randint(0, len(cards_by_type.get(types[player_type])))
-    opponent_number = randint(0, len(cards_by_type.get(types[opponent_type])))
-
-    card_1 = cards_by_type.get(list(cards_by_type.keys())[player_type])[player_number]
-    card_2 = cards_by_type.get(list(cards_by_type.keys())[opponent_type])[opponent_number]
-
-    battle_selection = Tk()
-    battle_selection.title("Saints Be Praised - Battle Selection")
-    battle_selection.geometry("925x475")
-
-    # Title
-    Label(battle_selection, text="Select Battle", font=font_large).grid(row=0, column=4, columnspan=5)
-
-    # Class selectors
-    player_class_back = Button(battle_selection, text="<", font=font_small)
-    player_class_back.grid(row=1, column=1)
-    player_class = Label(battle_selection, text=card_1.type.capitalize(), font=font_medium)
-    player_class.grid(row=1, column=2)
-    player_class_forward = Button(battle_selection, text=">", font=font_small)
-    player_class_forward.grid(row=1, column=3)
-
-    opponent_class_back = Button(battle_selection, text="<", font=font_small)
-    opponent_class_back.grid(row=1, column=9)
-    opponent_class = Label(battle_selection, text=card_2.type.capitalize(), font=font_medium)
-    opponent_class.grid(row=1, column=10)
-    opponent_class_forward = Button(battle_selection, text=">", font=font_small)
-    opponent_class_forward.grid(row=1, column=11)
-
-    # Card selectors
-    player_card_back = Button(battle_selection, text="<", font=font_medium)
-    player_card_back.grid(row=2, column=0)
-    player_card = Label(battle_selection, text=card_1.name, font=font_medium)
-    player_card.grid(row=2, column=1, columnspan=3)
-    player_card_forward = Button(battle_selection, text=">", font=font_medium)
-    player_card_forward.grid(row=2, column=4)
-
-    opponent_card_back = Button(battle_selection, text="<", font=font_medium)
-    opponent_card_back.grid(row=2, column=8)
-    opponent_card = Label(battle_selection, text=card_2.name, font=font_medium)
-    opponent_card.grid(row=2, column=9,columnspan=3)
-    opponent_card_forward = Button(battle_selection, text=">", font=font_medium)
-    opponent_card_forward.grid(row=2, column=12)
-
-    # Card sprites with backgrounds
-    player_canvas = Canvas(battle_selection, width=341, height=341)
-    player_background_image = PhotoImage(file="data/images/backgrounds/" + card_1.nation + ".png").subsample(3, 3)
-    player_canvas.create_image(10, 10, image=player_background_image, anchor=NW)
-    player_canvas.background_image = player_background_image
-    player_canvas.grid(row=3, column=1, columnspan=3)
-
-    player_sprite = PhotoImage(file="data/images/sprites/" + card_1.card_id + "-sprite.png").subsample(3, 3)
-    player_canvas.create_image(170, 221, image=player_sprite)
-    player_canvas.player_sprite = player_sprite
-
-    opponent_canvas = Canvas(battle_selection, width=341, height=341)
-    opponent_background_image = PhotoImage(file="data/images/backgrounds/" + card_2.nation + ".png").subsample(3, 3)
-    opponent_canvas.create_image(10, 10, image=opponent_background_image, anchor=NW)
-    opponent_canvas.background_image = opponent_background_image
-    opponent_canvas.grid(row=3, column=9, columnspan=3)
-
-    opponent_sprite = PhotoImage(file="data/images/sprites/" + card_2.card_id + "-sprite-reverse.png").subsample(3, 3)
-    opponent_canvas.create_image(170, 221, image=opponent_sprite)
-    opponent_canvas.opponent_sprite = opponent_sprite
-
-    battle_selection.mainloop()
-
-
 # Sprite test screen
 # displays all sprites
 def sprite_test(master, cards):
@@ -328,7 +239,7 @@ def main():
 
     # Buttons
     Button(root, text="Card Catalogue", font=font_medium, command=lambda: card_catalogue(root, cards)).pack()
-    Button(root, text="Select Battle", font=font_medium, command=lambda: select_battle(root, cards)).pack()
+    Button(root, text="Select Battle", font=font_medium, command=lambda: battle_select(root, cards)).pack()
     Button(root, text="Random Battle", font=font_medium, command=lambda: random_battle(root, cards)).pack()
     Button(root, text="Sprite Test", font=font_medium, command=lambda: sprite_test(root, cards)).pack()
 
