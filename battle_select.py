@@ -50,6 +50,49 @@ def update_card_preview(card, canvas, player):
 
 
 # Card class change function
+# facilitates browsing through cards of a type
+def card_change(canvas, name_label, player, forward):
+    global player_number, opponent_number, player_type, opponent_type
+
+    # Change player card
+    if player is True:
+        if forward is True:
+            # If current card is the last one, goes back to the first
+            if player_number == len(cards.get(list(cards.keys())[player_type])) - 1:
+                player_number = 0
+            else:
+                player_number += 1
+        else:
+            # If current card is the first one, wraps around to last
+            if player_number == 0:
+                player_number = len(cards.get(list(cards.keys())[player_type])) - 1
+            else:
+                player_number -= 1
+        card = cards.get(list(cards.keys())[player_type])[player_number]
+
+    # Change opponent card
+    else:
+        if forward is True:
+            # If current card is the last one, goes back to the first
+            if opponent_number == len(cards.get(list(cards.keys())[opponent_type])) - 1:
+                opponent_number = 0
+            else:
+                opponent_number += 1
+        else:
+            # If current card is the first one, wraps around to last
+            if opponent_number == 0:
+                opponent_number = len(cards.get(list(cards.keys())[opponent_type])) - 1
+            else:
+                opponent_number -= 1
+        card = cards.get(list(cards.keys())[opponent_type])[opponent_number]
+
+    update_card_preview(card, canvas, player)
+
+    # Update label
+    name_label.config(text=card.name)
+
+
+# Card class change function
 # facilitates browsing through classes
 def card_class_change(canvas, class_label, name_label, player, forward):
 
@@ -58,11 +101,13 @@ def card_class_change(canvas, class_label, name_label, player, forward):
     # Change player class
     if player is True:
         if forward is True:
+            # If current class is the last one, goes back to the first
             if player_type == len(list(cards.keys())) - 1:
                 player_type = 0
             else:
                 player_type += 1
         else:
+            # If current class is the first one, wraps around to last
             if player_type == 0:
                 player_type = len(list(cards.keys())) - 1
             else:
@@ -73,11 +118,13 @@ def card_class_change(canvas, class_label, name_label, player, forward):
     # Change opponent class
     else:
         if forward is True:
+            # If current class is the last one, goes back to the first
             if opponent_type == len(list(cards.keys())) - 1:
                 opponent_type = 0
             else:
                 opponent_type += 1
         else:
+            # If current class is the first one, wraps around to last
             if opponent_type == 0:
                 opponent_type = len(list(cards.keys())) - 1
             else:
@@ -154,18 +201,18 @@ def battle_select(master, all_cards):
     opponent_class_forward.grid(row=1, column=11)
 
     # Card selectors
-    player_card_back = Button(battle_selection, text="<", font=font_medium)
+    player_card_back = Button(battle_selection, text="<", font=font_medium, command=lambda: card_change(player_canvas, player_card, True, False))
     player_card_back.grid(row=2, column=0)
     player_card = Label(battle_selection, text=card_1.name, font=font_medium)
     player_card.grid(row=2, column=1, columnspan=3)
-    player_card_forward = Button(battle_selection, text=">", font=font_medium)
+    player_card_forward = Button(battle_selection, text=">", font=font_medium, command=lambda: card_change(player_canvas, player_card, True, True))
     player_card_forward.grid(row=2, column=4)
 
-    opponent_card_back = Button(battle_selection, text="<", font=font_medium)
+    opponent_card_back = Button(battle_selection, text="<", font=font_medium, command=lambda: card_change(opponent_canvas, opponent_card, False, False))
     opponent_card_back.grid(row=2, column=8)
     opponent_card = Label(battle_selection, text=card_2.name, font=font_medium)
     opponent_card.grid(row=2, column=9, columnspan=3)
-    opponent_card_forward = Button(battle_selection, text=">", font=font_medium)
+    opponent_card_forward = Button(battle_selection, text=">", font=font_medium, command=lambda: card_change(opponent_canvas, opponent_card, False, True))
     opponent_card_forward.grid(row=2, column=12)
 
     battle_selection.mainloop()
