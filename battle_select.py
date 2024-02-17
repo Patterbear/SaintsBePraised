@@ -1,5 +1,7 @@
 from random import randint
-from tkinter import Tk, Label, Canvas, PhotoImage, NW, Button
+from tkinter import Tk, Label, Canvas, PhotoImage, NW, Button, S
+
+from battle import battle
 
 # Temporary to prevent circular imports
 font_large = "Helvetica 20"
@@ -14,6 +16,8 @@ player_type = 0
 player_number = 0
 opponent_type = 0
 opponent_number = 0
+battlegrounds = ["apocalypse", "england", "heaven", "hell", "hell1", "ireland", "nowhere", "scotland", "wales"]
+battleground = 0
 cards = {}
 
 
@@ -52,7 +56,7 @@ def update_card_preview(card, canvas, player):
 # Card class change function
 # facilitates browsing through cards of a type
 def card_change(canvas, name_label, player, forward):
-    global player_number, opponent_number, player_type, opponent_type
+    global player_number, opponent_number, player_type, opponent_type, card_1, card_2
 
     # Change player card
     if player is True:
@@ -68,7 +72,8 @@ def card_change(canvas, name_label, player, forward):
                 player_number = len(cards.get(list(cards.keys())[player_type])) - 1
             else:
                 player_number -= 1
-        card = cards.get(list(cards.keys())[player_type])[player_number]
+        card_1 = cards.get(list(cards.keys())[player_type])[player_number]
+        card = card_1
 
     # Change opponent card
     else:
@@ -84,7 +89,8 @@ def card_change(canvas, name_label, player, forward):
                 opponent_number = len(cards.get(list(cards.keys())[opponent_type])) - 1
             else:
                 opponent_number -= 1
-        card = cards.get(list(cards.keys())[opponent_type])[opponent_number]
+        card_2 = cards.get(list(cards.keys())[opponent_type])[opponent_number]
+        card = card_2
 
     update_card_preview(card, canvas, player)
 
@@ -96,7 +102,7 @@ def card_change(canvas, name_label, player, forward):
 # facilitates browsing through classes
 def card_class_change(canvas, class_label, name_label, player, forward):
 
-    global cards, player_type, player_number, opponent_type, opponent_number
+    global cards, player_type, player_number, opponent_type, opponent_number, card_1, card_2
 
     # Change player class
     if player is True:
@@ -113,7 +119,8 @@ def card_class_change(canvas, class_label, name_label, player, forward):
             else:
                 player_type -= 1
         player_number = 0
-        card = cards.get(list(cards.keys())[player_type])[player_number]
+        card_1 = cards.get(list(cards.keys())[player_type])[player_number]
+        card = card_1
 
     # Change opponent class
     else:
@@ -130,13 +137,37 @@ def card_class_change(canvas, class_label, name_label, player, forward):
             else:
                 opponent_type -= 1
         opponent_number = 0
-        card = cards.get(list(cards.keys())[opponent_type])[opponent_number]
+        card_2 = cards.get(list(cards.keys())[opponent_type])[opponent_number]
+        card = card_2
 
     update_card_preview(card, canvas, player)
 
     # Update labels
     class_label.config(text=card.type.capitalize())
     name_label.config(text=card.name)
+
+
+def change_battleground(label, canvas, forward):
+    global battleground
+
+    if forward is True:
+        if battleground == len(battlegrounds) - 1:
+            battleground = 0
+        else:
+            battleground += 1
+    else:
+        if battleground == 0:
+            battleground = len(battlegrounds) - 1
+        else:
+            battleground -= 1
+
+    # Update battleground label and preview
+    label.config(text=battlegrounds[battleground].capitalize())
+
+    canvas.delete('all')
+    battleground_image = PhotoImage(file="data/images/backgrounds/" + battlegrounds[battleground] + ".png").subsample(9, 9)
+    canvas.create_image(10, 10, image=battleground_image, anchor=NW)
+    canvas.battleground_image = battleground_image
 
 
 # Battle selection screen
@@ -159,7 +190,7 @@ def battle_select(master, all_cards):
 
     battle_selection = Tk()
     battle_selection.title("Saints Be Praised - Battle Selection")
-    battle_selection.geometry("925x475")
+    battle_selection.geometry("1000x525")
 
     # Title
     Label(battle_selection, text="Select Battle", font=font_large).grid(row=0, column=4, columnspan=5)
@@ -169,7 +200,7 @@ def battle_select(master, all_cards):
     player_background_image = PhotoImage(file="data/images/backgrounds/" + card_1.nation + ".png").subsample(3, 3)
     player_canvas.create_image(10, 10, image=player_background_image, anchor=NW)
     player_canvas.background_image = player_background_image
-    player_canvas.grid(row=3, column=1, columnspan=3)
+    player_canvas.grid(row=3, column=1, columnspan=3, rowspan=5)
 
     player_sprite = PhotoImage(file="data/images/sprites/" + card_1.card_id + "-sprite.png").subsample(3, 3)
     player_canvas.create_image(170, 221, image=player_sprite)
@@ -179,7 +210,7 @@ def battle_select(master, all_cards):
     opponent_background_image = PhotoImage(file="data/images/backgrounds/" + card_2.nation + ".png").subsample(3, 3)
     opponent_canvas.create_image(10, 10, image=opponent_background_image, anchor=NW)
     opponent_canvas.background_image = opponent_background_image
-    opponent_canvas.grid(row=3, column=9, columnspan=3)
+    opponent_canvas.grid(row=3, column=9, columnspan=3, rowspan=5)
 
     opponent_sprite = PhotoImage(file="data/images/sprites/" + card_2.card_id + "-sprite-reverse.png").subsample(3, 3)
     opponent_canvas.create_image(170, 221, image=opponent_sprite)
@@ -202,7 +233,7 @@ def battle_select(master, all_cards):
 
     # Card selectors
     player_card_back = Button(battle_selection, text="<", font=font_medium, command=lambda: card_change(player_canvas, player_card, True, False))
-    player_card_back.grid(row=2, column=0)
+    player_card_back.grid(row=2, column=0, padx=(10, 0))
     player_card = Label(battle_selection, text=card_1.name, font=font_medium)
     player_card.grid(row=2, column=1, columnspan=3)
     player_card_forward = Button(battle_selection, text=">", font=font_medium, command=lambda: card_change(player_canvas, player_card, True, True))
@@ -214,6 +245,32 @@ def battle_select(master, all_cards):
     opponent_card.grid(row=2, column=9, columnspan=3)
     opponent_card_forward = Button(battle_selection, text=">", font=font_medium, command=lambda: card_change(opponent_canvas, opponent_card, False, True))
     opponent_card_forward.grid(row=2, column=12)
+
+    # 'vs' label
+    Label(battle_selection, text="vs", font=font_large).grid(row=3, column=6)
+
+    # Battleground selection
+    global battleground
+    battleground = randint(0, len(battlegrounds) - 1)
+
+    battleground_label = Label(battle_selection, text=battlegrounds[battleground].capitalize(), font=font_medium)
+    battleground_label.grid(row=4, column=5, columnspan=3, sticky=S)
+
+    battleground_canvas = Canvas(battle_selection, width=114, height=114)
+    battleground_image = PhotoImage(file="data/images/backgrounds/" + battlegrounds[battleground] + ".png").subsample(9, 9)
+    battleground_canvas.create_image(10, 10, image=battleground_image, anchor=NW)
+    battleground_canvas.battleground_image = battleground_image
+    battleground_canvas.grid(row=5, column=6, rowspan=3)
+
+    battleground_back = Button(battle_selection, text="<", font=font_medium, command=lambda: change_battleground(battleground_label, battleground_canvas, False))
+    battleground_back.grid(row=6, column=5)
+
+    battleground_forward = Button(battle_selection, text=">", font=font_medium, command=lambda: change_battleground(battleground_label, battleground_canvas, True))
+    battleground_forward.grid(row=6, column=7)
+
+    # Battle button
+    battle_button = Button(battle_selection, text="Battle", font=font_large, command=lambda: battle(card_1, card_2, battlegrounds[battleground]))
+    battle_button.grid(row=8, column=6)
 
     battle_selection.mainloop()
     

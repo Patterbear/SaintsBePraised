@@ -5,7 +5,17 @@ from tkinter.scrolledtext import ScrolledText
 from turtle import RawTurtle, TurtleScreen
 
 from data.moves import get_move
-from game import font_large, font_medium, screen_size
+
+# Temporary to prevent circular imports
+font_large = "Helvetica 20"
+font_medium = "Helvetica 15"
+font_small = "Helvetica 10"
+font_extra_small = "Helvetica 8"
+
+
+# Temporary to prevent circular imports
+def screen_size(root):
+    return str(root.winfo_screenwidth()) + "x" + str(root.winfo_screenheight())
 
 
 # Attack function
@@ -85,7 +95,7 @@ def draw_healthbar(healthbar, percentage):
     healthbar.update()
 
 
-def battle(card_1, card_2):
+def battle(card_1, card_2, battleground):
     battle_screen = Tk()
     battle_screen.title("Saints Be Praised - Battle")
     battle_screen.geometry(screen_size(battle_screen))
@@ -94,12 +104,12 @@ def battle(card_1, card_2):
     canvas = Canvas(battle_screen, width=1024, height=1024)
 
     # Background image
-    background_image = PhotoImage(file="data/images/backgrounds/hell1.png")
+    background_image = PhotoImage(master=canvas, file="data/images/backgrounds/" + battleground + ".png")
     canvas.create_image(10, 10, image=background_image, anchor=NW)
     canvas.background_image = background_image
 
     # Player sprite
-    player_sprite = PhotoImage(file="data/images/sprites/" + card_1.card_id + "-sprite.png").subsample(2, 2)
+    player_sprite = PhotoImage(master=canvas, file="data/images/sprites/" + card_1.card_id + "-sprite.png").subsample(2, 2)
     canvas.create_image(210, 475, image=player_sprite)
     canvas.player_sprite = player_sprite
 
@@ -111,7 +121,7 @@ def battle(card_1, card_2):
     Label(card_1_status_frame, text=card_1.name, font=font_large).grid(row=0, column=0, columnspan=3)
 
     # Health icon
-    health_icon = PhotoImage(file="data/images/icons/icon-health.png").subsample(50, 50)
+    health_icon = PhotoImage(master=card_1_status_frame, file="data/images/icons/icon-health.png").subsample(50, 50)
     health_icon_label = Label(card_1_status_frame, image=health_icon)
     health_icon_label.image = health_icon
     health_icon_label.grid(row=1, column=0)
@@ -126,7 +136,7 @@ def battle(card_1, card_2):
     Label(card_1_status_frame, text="Level " + str(card_1.level), font=font_medium).grid(row=0, column=4, sticky=E)
 
     # Opponent sprite
-    opponent_sprite = PhotoImage(file="data/images/sprites/" + card_2.card_id + "-sprite-reverse.png").subsample(2, 2)
+    opponent_sprite = PhotoImage(master=canvas, file="data/images/sprites/" + card_2.card_id + "-sprite-reverse.png").subsample(2, 2)
     canvas.create_image(830, 275, image=opponent_sprite)
     canvas.opponent_sprite = opponent_sprite
 
@@ -138,7 +148,7 @@ def battle(card_1, card_2):
     Label(card_2_status_frame, text=card_2.name, font=font_large).grid(row=0, column=0, columnspan=3)
 
     # Health icon
-    health_icon = PhotoImage(file="data/images/icons/icon-health.png").subsample(50, 50)
+    health_icon = PhotoImage(master=card_2_status_frame, file="data/images/icons/icon-health.png").subsample(50, 50)
     health_icon_label = Label(card_2_status_frame, image=health_icon)
     health_icon_label.image = health_icon
     health_icon_label.grid(row=1, column=0)

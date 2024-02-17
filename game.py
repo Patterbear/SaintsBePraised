@@ -1,17 +1,12 @@
 from os.path import exists
-from random import choice, randint
-from tkinter import Tk, Label, Button, Toplevel, PhotoImage, Image, Canvas, NW
+from tkinter import Tk, Label, Button, Toplevel, PhotoImage, Image
 
-import battle
 from battle_select import battle_select
 from classes.card import Card
 from data.cards import saints, knights, divines, demons, horsemen, angels, others
+from data.moves import get_move
 
 # Game fonts
-from data.moves import get_move
-from winsound import PlaySound, SND_ASYNC
-
-
 font_large = "Helvetica 20"
 font_medium = "Helvetica 15"
 font_small = "Helvetica 10"
@@ -187,17 +182,6 @@ def card_catalogue(master, cards):
             column += 1
 
 
-# Random battle
-# sets up an auto battle between to randomly selected cards
-def random_battle(master, cards):
-    master.destroy()
-
-    card1 = choice(cards)
-    card2 = choice(cards)
-    PlaySound('data/sounds/battle.wav', SND_ASYNC)
-    battle.battle(card1, card2)
-
-
 # Sprite test screen
 # displays all sprites
 def sprite_test(master, cards):
@@ -240,7 +224,6 @@ def main():
     # Buttons
     Button(root, text="Card Catalogue", font=font_medium, command=lambda: card_catalogue(root, cards)).pack()
     Button(root, text="Select Battle", font=font_medium, command=lambda: battle_select(root, cards)).pack()
-    Button(root, text="Random Battle", font=font_medium, command=lambda: random_battle(root, cards)).pack()
     Button(root, text="Sprite Test", font=font_medium, command=lambda: sprite_test(root, cards)).pack()
 
     root.mainloop()
