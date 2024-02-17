@@ -16,7 +16,7 @@ player_type = 0
 player_number = 0
 opponent_type = 0
 opponent_number = 0
-battlegrounds = ["apocalypse", "england", "heaven", "hell", "hell1", "ireland", "nowhere", "scotland", "wales"]
+battlegrounds = ["apocalypse", "england", "heaven", "hell", "hell1", "ireland", "nowhere", "scotland", "wales", "israel"]
 battleground = 0
 cards = {}
 

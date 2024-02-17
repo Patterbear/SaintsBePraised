@@ -46,6 +46,6 @@ angels = {
 
 # Temporary category
 others = {
-    "moses": ["other", "Moses", "heaven", 80, 800, 90, 90, []],
+    "moses": ["other", "Moses", "israel", 80, 800, 90, 90, []],
     "john-the-baptist": ["other", "John the Baptist", "heaven", 80, 800, 90, 90, []],
 }
