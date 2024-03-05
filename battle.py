@@ -1,4 +1,4 @@
-from tkinter import Tk, Frame, Label, Canvas, E, PhotoImage, Button, NW
+from tkinter import Tk, Frame, Label, Canvas, E, PhotoImage, Button, NW, N
 
 # Executes attackers chosen move
 from tkinter.scrolledtext import ScrolledText
@@ -15,7 +15,7 @@ font_extra_small = "Helvetica 8"
 
 # Temporary to prevent circular imports
 def screen_size(root):
-    return str(root.winfo_screenwidth()) + "x" + str(root.winfo_screenheight())
+    return [root.winfo_screenwidth(), root.winfo_screenheight()]
 
 
 # Attack function
@@ -95,27 +95,40 @@ def draw_healthbar(healthbar, percentage):
     healthbar.update()
 
 
+# Battle screen
 def battle(card_1, card_2, battleground):
     battle_screen = Tk()
     battle_screen.title("Saints Be Praised - Battle")
-    battle_screen.geometry(screen_size(battle_screen))
+    dimensions = screen_size(battle_screen)
+    battle_screen.geometry(str(dimensions[0]) + "x" + str(dimensions[1]))
+
+    # Begin coords for drawing on canvas, leaves equal spaces at sides
+    canvas_begin = int((dimensions[0] - 1024) / 2)
+
+    # Bottom canvas coords
+    canvas_depth = 512
 
     # Canvas
-    canvas = Canvas(battle_screen, width=1024, height=1024)
+    battle_canvas = Canvas(battle_screen, width=1024, height=canvas_depth)
 
     # Background image
-    background_image = PhotoImage(master=canvas, file="data/images/backgrounds/" + battleground + ".png")
-    canvas.create_image(10, 10, image=background_image, anchor=NW)
-    canvas.background_image = background_image
+    background_image = PhotoImage(master=battle_canvas, file="data/images/backgrounds/" + battleground + ".png").subsample(1, 2)
+    battle_canvas.create_image(0, 0, image=background_image, anchor=NW)
+    battle_canvas.background_image = background_image
 
     # Player sprite
-    player_sprite = PhotoImage(master=canvas, file="data/images/sprites/" + card_1.card_id + "-sprite.png").subsample(2, 2)
-    canvas.create_image(210, 475, image=player_sprite)
-    canvas.player_sprite = player_sprite
+    player_sprite = PhotoImage(master=battle_canvas, file="data/images/sprites/" + card_1.card_id + "-sprite.png").subsample(2, 2)
+    battle_canvas.create_image(10 + (player_sprite.width() / 2), canvas_depth - (player_sprite.height() / 2), image=player_sprite)
+    battle_canvas.player_sprite = player_sprite
+
+    # Opponent sprite
+    opponent_sprite = PhotoImage(master=battle_canvas, file="data/images/sprites/" + card_2.card_id + "-sprite-reverse.png").subsample(2, 2)
+    battle_canvas.create_image(1014 - (opponent_sprite.width() / 2), canvas_depth - (opponent_sprite.height() / 2), image=opponent_sprite)
+    battle_canvas.opponent_sprite = opponent_sprite
 
     # Card 1 status widget
     card_1_status_frame = Frame(battle_screen)
-    card_1_status_frame.place(x=170, y=225)
+    card_1_status_frame.place(x=canvas_begin + 10, y=canvas_depth / 8)
 
     # Name and health labels
     Label(card_1_status_frame, text=card_1.name, font=font_large).grid(row=0, column=0, columnspan=3)
@@ -135,14 +148,9 @@ def battle(card_1, card_2, battleground):
     # Level label
     Label(card_1_status_frame, text="Level " + str(card_1.level), font=font_medium).grid(row=0, column=4, sticky=E)
 
-    # Opponent sprite
-    opponent_sprite = PhotoImage(master=canvas, file="data/images/sprites/" + card_2.card_id + "-sprite-reverse.png").subsample(2, 2)
-    canvas.create_image(830, 275, image=opponent_sprite)
-    canvas.opponent_sprite = opponent_sprite
-
     # Card 2 (opponent) status widget
     card_2_status_frame = Frame(battle_screen)
-    card_2_status_frame.place(x=790, y=20)
+    card_2_status_frame.place(x=canvas_begin + 1014 - opponent_sprite.width(), y=canvas_depth / 8)
 
     # Name and health labels
     Label(card_2_status_frame, text=card_2.name, font=font_large).grid(row=0, column=0, columnspan=3)
@@ -162,18 +170,25 @@ def battle(card_1, card_2, battleground):
     # Level label
     Label(card_2_status_frame, text="Level " + str(card_2.level), font=font_medium).grid(row=0, column=4, sticky=E)
 
+    battle_canvas.grid(row=0, column=0, columnspan=2, padx=(canvas_begin, 0))
+
     # Combat log
-    combat_log = ScrolledText(battle_screen, width=30, height=6, font=font_medium)
-    combat_log.place(x=460, y=475)
+    combat_log = ScrolledText(battle_screen, width=51, height=5, font=font_medium)
+    combat_log.grid(row=1, column=0, padx=(canvas_begin, 0), sticky=N)
+
+    # Buttons panel
+    buttons = Frame(battle_screen)
+    buttons.grid(row=1,column=1, sticky=N)
 
     # Player buttons
-    attack_button = Button(battle_screen, text="Attack", font=font_large, command=lambda: attack(card_1, card_2, card_2_healthbar_ts))
-    attack_button.place(x=850, y=475)
-    defend_button = Button(battle_screen, text="Defend", font=font_large)
-    defend_button.place(x=970, y=475)
-    heal_button = Button(battle_screen, text="Heal", font=font_large, command=lambda: heal(card_2, card_2_healthbar_ts))
-    heal_button.place(x=920, y=575)
+    moves_button = Button(buttons, text="Moves", font=font_large, width=10, command=lambda: attack(card_1, card_2, card_2_healthbar_ts))
+    moves_button.grid(row=0, column=0)
+    items_button = Button(buttons, text="Items", font=font_large, width=10)
+    items_button.grid(row=0, column=1, padx=5)
+    cards_button = Button(buttons, text="Cards", font=font_large, width=10, command=lambda: heal(card_2, card_2_healthbar_ts))
+    cards_button.grid(row=1, column=0, pady=5)
+    options_button = Button(buttons, text="Options", font=font_large,  width=10, command=lambda: heal(card_2, card_2_healthbar_ts))
+    options_button.grid(row=1, column=1, padx=5, pady=5)
 
-    canvas.pack()
 
     battle_screen.mainloop()

@@ -40,7 +40,7 @@ horsemen = {
 
 # I know St. Michael is both. Multiple categories will be allowed
 angels = {
-    "angel-cherubim": ["angel", "Cherubim", "heaven", 40, 400, 60, 60,[]],
+    #"angel-cherubim": ["angel", "Cherubim", "heaven", 40, 400, 60, 60,[]],
     #"angel-throne": ["Throne", "angel", 40, 400, 60, 60,[]],
 }
 
