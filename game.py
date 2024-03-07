@@ -3,7 +3,7 @@ from tkinter import Tk, Label, Button, Toplevel, PhotoImage, Image
 
 from battle_select import battle_select
 from classes.card import Card
-from data.cards import saints, knights, divines, demons, horsemen, angels, others
+from data.cards import saints, knights, divines, demons, horsemen, others
 from data.moves import get_move
 
 # Game fonts
@@ -11,6 +11,8 @@ font_large = "Helvetica 20"
 font_medium = "Helvetica 15"
 font_small = "Helvetica 10"
 font_extra_small = "Helvetica 8"
+
+religious = True
 
 
 # Get Screen Size function
@@ -47,20 +49,25 @@ def set_moves_to_basic(cards):
 def load_cards():
     loaded_cards = []
 
-    # Append saint objects
+# Append saint objects
     saints_list = create_cards_from_list(saints)
     for i in range(0, len(saints_list)):
         loaded_cards.append(saints_list[i])
-
-    # Append knight objects
-    knights_list = create_cards_from_list(knights)
-    for i in range(0, len(knights_list)):
-        loaded_cards.append(knights_list[i])
 
     # Append divine objects
     divines_list = create_cards_from_list(divines)
     for i in range(0, len(divines_list)):
         loaded_cards.append(divines_list[i])
+
+    # Append other objects
+    others_list = create_cards_from_list(others)
+    for i in range(0, len(others_list)):
+        loaded_cards.append(others_list[i])
+
+    # Append knight objects
+    knights_list = create_cards_from_list(knights)
+    for i in range(0, len(knights_list)):
+        loaded_cards.append(knights_list[i])
 
     # Append demon objects
     demons_list = create_cards_from_list(demons)
@@ -71,15 +78,6 @@ def load_cards():
     horsemen_list = create_cards_from_list(horsemen)
     for i in range(0, len(horsemen_list)):
         loaded_cards.append(horsemen_list[i])
-
-    angels_list = create_cards_from_list(angels)
-    for i in range(0, len(angels_list)):
-        loaded_cards.append(angels_list[i])
-
-    # Append other objects
-    others_list = create_cards_from_list(others)
-    for i in range(0, len(others_list)):
-        loaded_cards.append(others_list[i])
 
     # Set all card moves to the basic ones
     loaded_cards = set_moves_to_basic(loaded_cards)
@@ -159,7 +157,6 @@ def card_catalogue(master, cards):
     column = 0
     for i in range(0, len(cards)):
         if column == 0:
-            #Separator(catalogue, orient=HORIZONTAL).grid(row=row, column=column, columnspan=6, sticky=EW)
             row += 1
         card = cards[i]
 
@@ -205,6 +202,28 @@ def sprite_test(master, cards):
                 column += 1
 
 
+# Filters out religious cards if chosen
+def select_battle(root, cards):
+    filtered = ["saint", "divine", "other"]
+    global religious
+
+    filtered_cards = []
+
+    if not religious:
+        for card in cards:
+            if card.type not in filtered:
+                filtered_cards.append(card)
+
+    battle_select(root, filtered_cards)
+
+
+# Toggles 'religious mode'
+def toggle_religious():
+    global religious
+
+    religious = not religious
+
+
 # Main function
 def main():
     root = Tk()
@@ -223,8 +242,10 @@ def main():
 
     # Buttons
     Button(root, text="Card Catalogue", font=font_medium, command=lambda: card_catalogue(root, cards)).pack()
-    Button(root, text="Select Battle", font=font_medium, command=lambda: battle_select(root, cards)).pack()
+    Button(root, text="Select Battle", font=font_medium, command=lambda: select_battle(root, cards)).pack()
     Button(root, text="Sprite Test", font=font_medium, command=lambda: sprite_test(root, cards)).pack()
+
+    Button(root, text="Settings", command=lambda: toggle_religious()).pack()
 
     root.mainloop()
 
