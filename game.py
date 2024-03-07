@@ -213,6 +213,8 @@ def select_battle(root, cards):
         for card in cards:
             if card.type not in filtered:
                 filtered_cards.append(card)
+    else:
+        filtered_cards = cards
 
     battle_select(root, filtered_cards)
 
