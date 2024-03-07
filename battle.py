@@ -144,6 +144,36 @@ def show_items(battle_screen, buttons, card_1, x, y):
     items.place(x=x, y=y - (40 * (len(items_demo) + 1)))
 
 
+# Draw battle scene function
+# draws sprites, battleground and effects to canvas
+# can be used to animate sprites and display effects
+def draw_battle(canvas, card_1, card_2, battleground, offsets=None):
+    if offsets is None:
+        offsets = [0, 0, 0, 0]
+
+    canvas.delete('all')
+
+    background_image = PhotoImage(master=canvas, file="data/images/backgrounds/" + battleground + ".png").subsample(1, 2)
+    canvas.create_image(0, 0, image=background_image, anchor=NW)
+    canvas.background_image = background_image
+
+    # Player sprite
+    player_sprite = PhotoImage(master=canvas, file="data/images/sprites/" + card_1.card_id + "-sprite.png").subsample(2, 2)
+    canvas.create_image(10 + (player_sprite.width() / 2) + offsets[0], 512 - (player_sprite.height() / 2) + offsets[1], image=player_sprite)
+    canvas.player_sprite = player_sprite
+
+    # Opponent sprite
+    opponent_sprite = PhotoImage(master=canvas, file="data/images/sprites/" + card_2.card_id + "-sprite-reverse.png").subsample(2, 2)
+    canvas.create_image(1014 - (opponent_sprite.width() / 2) + offsets[2], 512 - (opponent_sprite.height() / 2) + offsets[3], image=opponent_sprite)
+    canvas.opponent_sprite = opponent_sprite
+
+
+# Combat function
+# will run a loop of turns until one card has 0 health
+def combat(battle_canvas, card_1, card_2, healthbars, buttons, battleground, combat_log):
+    pass
+
+
 # Battle screen
 def battle(card_1, card_2, battleground):
     battle_screen = Tk()
@@ -160,24 +190,14 @@ def battle(card_1, card_2, battleground):
     # Canvas
     battle_canvas = Canvas(battle_screen, width=1024, height=canvas_depth)
 
-    # Background image
-    background_image = PhotoImage(master=battle_canvas, file="data/images/backgrounds/" + battleground + ".png").subsample(1, 2)
-    battle_canvas.create_image(0, 0, image=background_image, anchor=NW)
-    battle_canvas.background_image = background_image
+    # Array for healthbars
+    healthbars =[]
 
-    # Player sprite
-    player_sprite = PhotoImage(master=battle_canvas, file="data/images/sprites/" + card_1.card_id + "-sprite.png").subsample(2, 2)
-    battle_canvas.create_image(10 + (player_sprite.width() / 2), canvas_depth - (player_sprite.height() / 2), image=player_sprite)
-    battle_canvas.player_sprite = player_sprite
-
-    # Opponent sprite
-    opponent_sprite = PhotoImage(master=battle_canvas, file="data/images/sprites/" + card_2.card_id + "-sprite-reverse.png").subsample(2, 2)
-    battle_canvas.create_image(1014 - (opponent_sprite.width() / 2), canvas_depth - (opponent_sprite.height() / 2), image=opponent_sprite)
-    battle_canvas.opponent_sprite = opponent_sprite
+    # Draw initial battle scene
+    draw_battle(battle_canvas, card_1, card_2, battleground)
 
     # Card 1 status widget
     card_1_status_frame = Frame(battle_screen)
-    card_1_status_frame.place(x=canvas_begin + 10, y=canvas_depth / 8)
 
     # Name and health labels
     Label(card_1_status_frame, text=card_1.name, font=font_large).grid(row=0, column=0, columnspan=3)
@@ -191,15 +211,17 @@ def battle(card_1, card_2, battleground):
     #  Health bar
     card_1_healthbar = Canvas(card_1_status_frame, height=20, width=300)
     card_1_healthbar.grid(row=1, column=1, columnspan=4)
-    card_1_healthbar_ts = TurtleScreen(card_1_healthbar)
-    draw_healthbar(card_1_healthbar_ts, 100)
+    healthbars.append(TurtleScreen(card_1_healthbar))
+    draw_healthbar(healthbars[0], 100)
 
     # Level label
     Label(card_1_status_frame, text="Level " + str(card_1.level), font=font_medium).grid(row=0, column=4, sticky=E)
 
+    # Place status frame
+    card_1_status_frame.place(x=canvas_begin + 10, y=canvas_depth / 8)
+
     # Card 2 (opponent) status widget
     card_2_status_frame = Frame(battle_screen)
-    card_2_status_frame.place(x=canvas_begin + 1014 - opponent_sprite.width(), y=canvas_depth / 8)
 
     # Name and health labels
     Label(card_2_status_frame, text=card_2.name, font=font_large).grid(row=0, column=0, columnspan=3)
@@ -213,11 +235,14 @@ def battle(card_1, card_2, battleground):
     #  Health bar
     card_2_healthbar = Canvas(card_2_status_frame, height=20, width=300)
     card_2_healthbar.grid(row=1, column=1, columnspan=4)
-    card_2_healthbar_ts = TurtleScreen(card_2_healthbar)
-    draw_healthbar(card_2_healthbar_ts, 100)
+    healthbars.append(TurtleScreen(card_2_healthbar))
+    draw_healthbar(healthbars[1], 100)
 
     # Level label
     Label(card_2_status_frame, text="Level " + str(card_2.level), font=font_medium).grid(row=0, column=4, sticky=E)
+
+    # Place status frame
+    card_2_status_frame.place(x=dimensions[0] - canvas_begin - 10 - card_2_status_frame.winfo_reqwidth(), y=canvas_depth / 8)
 
     battle_canvas.grid(row=0, column=0, columnspan=2, padx=(canvas_begin, 0))
 
@@ -235,11 +260,13 @@ def battle(card_1, card_2, battleground):
     moves_button.grid(row=0, column=0)
     items_button = Button(buttons, text="Items", font=font_large, width=10, command=lambda: show_items(battle_screen, buttons_list, card_1, buttons.winfo_x() + moves_button.winfo_width() + 5, buttons.winfo_y()))
     items_button.grid(row=0, column=1, padx=5)
-    cards_button = Button(buttons, text="Cards", font=font_large, width=10, command=lambda: heal(card_2, card_2_healthbar_ts))
+    cards_button = Button(buttons, text="Cards", font=font_large, width=10,command=lambda: draw_battle(battle_canvas, card_1, card_2, battleground, [256, 0, 10, 0]))
     cards_button.grid(row=1, column=0, pady=5)
-    options_button = Button(buttons, text="Options", font=font_large,  width=10, command=lambda: heal(card_2, card_2_healthbar_ts))
+    options_button = Button(buttons, text="Options", font=font_large,  width=10, command=lambda: draw_battle(battle_canvas, card_1, card_2, battleground, [-10, 0, -256, 0]))
     options_button.grid(row=1, column=1, padx=5, pady=5)
 
     buttons_list = [moves_button, items_button, cards_button, options_button]
+
+    combat(battle_canvas, card_1, card_2, healthbars, buttons, battleground, combat_log)
 
     battle_screen.mainloop()
