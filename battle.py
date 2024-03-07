@@ -115,12 +115,13 @@ def toggle_buttons(buttons, on):
 
 # Moves menu
 # brings up menu of player moves
-def show_moves(battle_screen, buttons, card_1, x, y):
+def show_moves(battle_screen, buttons, card_1, x, y, choice_label):
     toggle_buttons(buttons, False)
     moves = Frame(battle_screen, background='')
 
     for i in range(0, len(card_1.moves)):
-        Button(moves, text=card_1.moves[i].title, font=font_medium, width=10).pack()
+        move = card_1.moves[i]
+        Button(moves, text=card_1.moves[i].title, font=font_medium, width=10, command=lambda this_move=move: choose_move(card_1, this_move, choice_label, moves, buttons)).pack()
 
     back_button = Button(moves, text='Back', font=font_medium, width=10, command=lambda: menu_back(buttons, moves))
     back_button.pack()
@@ -142,6 +143,15 @@ def show_items(battle_screen, buttons, card_1, x, y):
     back_button.pack()
 
     items.place(x=x, y=y - (40 * (len(items_demo) + 1)))
+
+
+# Choose move function
+# sets card's next move to the one chosen by the player and updates choice label
+def choose_move(card, move, choice_label, menu, buttons):
+    menu.destroy()
+    card.next_move = move
+    choice_label.config(text="Choice: " + move.title)
+    toggle_buttons(buttons, True)
 
 
 # Draw battle scene function
@@ -168,9 +178,9 @@ def draw_battle(canvas, card_1, card_2, battleground, offsets=None):
     canvas.opponent_sprite = opponent_sprite
 
 
-# Combat function
+#  Advance function
 # will run a loop of turns until one card has 0 health
-def combat(battle_canvas, card_1, card_2, healthbars, buttons, battleground, combat_log):
+def advance(battle_canvas, card_1, card_2, healthbars, buttons, battleground, combat_log):
     pass
 
 
@@ -191,7 +201,7 @@ def battle(card_1, card_2, battleground):
     battle_canvas = Canvas(battle_screen, width=1024, height=canvas_depth)
 
     # Array for healthbars
-    healthbars =[]
+    healthbars = []
 
     # Draw initial battle scene
     draw_battle(battle_canvas, card_1, card_2, battleground)
@@ -244,7 +254,7 @@ def battle(card_1, card_2, battleground):
     # Place status frame
     card_2_status_frame.place(x=dimensions[0] - canvas_begin - 10 - card_2_status_frame.winfo_reqwidth(), y=canvas_depth / 8)
 
-    battle_canvas.grid(row=0, column=0, columnspan=2, padx=(canvas_begin, 0))
+    battle_canvas.grid(row=0, column=0, columnspan=3, padx=(canvas_begin, 0))
 
     # Combat log
     combat_log = ScrolledText(battle_screen, width=51, height=5, font=font_medium)
@@ -252,21 +262,34 @@ def battle(card_1, card_2, battleground):
 
     # Buttons panel
     buttons = Frame(battle_screen)
-    buttons.grid(row=1,column=1, sticky=N)
+    buttons.grid(row=1, column=1, sticky=N)
 
     # Player buttons
     buttons_list = []
-    moves_button = Button(buttons, text="Moves", font=font_large, width=10, command=lambda: show_moves(battle_screen, buttons_list, card_1, buttons.winfo_x(), buttons.winfo_y()))
+    moves_button = Button(buttons, text="Moves", font=font_large, width=6, command=lambda: show_moves(battle_screen, buttons_list, card_1, buttons.winfo_x(), buttons.winfo_y(), choice_label))
     moves_button.grid(row=0, column=0)
-    items_button = Button(buttons, text="Items", font=font_large, width=10, command=lambda: show_items(battle_screen, buttons_list, card_1, buttons.winfo_x() + moves_button.winfo_width() + 5, buttons.winfo_y()))
+    items_button = Button(buttons, text="Items", font=font_large, width=6, command=lambda: show_items(battle_screen, buttons_list, card_1, buttons.winfo_x() + moves_button.winfo_width() + 5, buttons.winfo_y()))
     items_button.grid(row=0, column=1, padx=5)
-    cards_button = Button(buttons, text="Cards", font=font_large, width=10,command=lambda: draw_battle(battle_canvas, card_1, card_2, battleground, [256, 0, 10, 0]))
+    cards_button = Button(buttons, text="Cards", font=font_large, width=6, command=lambda: draw_battle(battle_canvas, card_1, card_2, battleground, [256, 0, 10, 0]))
     cards_button.grid(row=1, column=0, pady=5)
-    options_button = Button(buttons, text="Options", font=font_large,  width=10, command=lambda: draw_battle(battle_canvas, card_1, card_2, battleground, [-10, 0, -256, 0]))
+    options_button = Button(buttons, text="Options", font=font_large,  width=6, command=lambda: draw_battle(battle_canvas, card_1, card_2, battleground, [-10, 0, -256, 0]))
     options_button.grid(row=1, column=1, padx=5, pady=5)
 
     buttons_list = [moves_button, items_button, cards_button, options_button]
 
-    combat(battle_canvas, card_1, card_2, healthbars, buttons, battleground, combat_log)
+    # Frame to display player choice and advance button
+    choice_frame = Frame(battle_screen)
+
+    # Player choice label
+    choice_label = Label(choice_frame, text="Choice: None", font=font_medium, width=16)
+    choice_label.pack()
+
+    # Advance button
+    advance_icon = PhotoImage(master=choice_frame, file="data/images/icons/icon-advance.png").subsample(8, 9)
+    advance_button = Button(choice_frame, image=advance_icon)
+    advance_button.advance_icon = advance_icon
+    advance_button.pack()
+
+    choice_frame.grid(row=1, column=2)
 
     battle_screen.mainloop()
