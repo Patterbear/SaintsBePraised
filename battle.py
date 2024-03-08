@@ -1,9 +1,10 @@
-from tkinter import Tk, Frame, Label, Canvas, E, PhotoImage, Button, NW, N
+from tkinter import Tk, Frame, Label, Canvas, E, PhotoImage, Button, N, INSERT, END
 
 # Executes attackers chosen move
 from tkinter.scrolledtext import ScrolledText
 from turtle import RawTurtle, TurtleScreen
 
+from animations.combat import draw_battle, animate_attack
 from data.moves import get_move
 
 # Temporary to prevent circular imports
@@ -154,34 +155,35 @@ def choose_move(card, move, choice_label, menu, buttons):
     toggle_buttons(buttons, True)
 
 
-# Draw battle scene function
-# draws sprites, battleground and effects to canvas
-# can be used to animate sprites and display effects
-def draw_battle(canvas, card_1, card_2, battleground, offsets=None):
-    if offsets is None:
-        offsets = [0, 0, 0, 0]
-
-    canvas.delete('all')
-
-    background_image = PhotoImage(master=canvas, file="data/images/backgrounds/" + battleground + ".png").subsample(1, 2)
-    canvas.create_image(0, 0, image=background_image, anchor=NW)
-    canvas.background_image = background_image
-
-    # Player sprite
-    player_sprite = PhotoImage(master=canvas, file="data/images/sprites/" + card_1.card_id + "-sprite.png").subsample(2, 2)
-    canvas.create_image(10 + (player_sprite.width() / 2) + offsets[0], 512 - (player_sprite.height() / 2) + offsets[1], image=player_sprite)
-    canvas.player_sprite = player_sprite
-
-    # Opponent sprite
-    opponent_sprite = PhotoImage(master=canvas, file="data/images/sprites/" + card_2.card_id + "-sprite-reverse.png").subsample(2, 2)
-    canvas.create_image(1014 - (opponent_sprite.width() / 2) + offsets[2], 512 - (opponent_sprite.height() / 2) + offsets[3], image=opponent_sprite)
-    canvas.opponent_sprite = opponent_sprite
+# Animate move function
+# calls an animation function determined by the given move
+def animate_move(canvas, card_1, card_2, battleground):
+    print(card_1.next_move.move_id)
+    match card_1.next_move.move_id:
+        case "attack0":
+            print("hello")
+            animate_attack(canvas, card_1, card_2, battleground)
 
 
 #  Advance function
-# will run a loop of turns until one card has 0 health
+# executes the player's chosen move and executes an enemy response
 def advance(battle_canvas, card_1, card_2, healthbars, buttons, battleground, combat_log):
-    pass
+    # Disable buttons
+    toggle_buttons(buttons, False)
+
+    # Player card move
+
+    # Combat log update
+    combat_log.config(state='normal')
+    combat_log.delete(1.0, END)
+    combat_log.insert(INSERT, card_1.name + " uses " + card_1.next_move.title + ".")
+    combat_log.config(state='disabled')
+
+    # Animate move
+    animate_move(battle_canvas, card_1, card_2, battleground)
+
+    # Re-enable button
+    toggle_buttons(buttons, True)
 
 
 # Battle screen
@@ -257,7 +259,7 @@ def battle(card_1, card_2, battleground):
     battle_canvas.grid(row=0, column=0, columnspan=3, padx=(canvas_begin, 0))
 
     # Combat log
-    combat_log = ScrolledText(battle_screen, width=51, height=5, font=font_medium)
+    combat_log = ScrolledText(battle_screen, width=51, height=5, font=font_medium, state='disabled')
     combat_log.grid(row=1, column=0, padx=(canvas_begin, 0), sticky=N)
 
     # Buttons panel
@@ -286,9 +288,11 @@ def battle(card_1, card_2, battleground):
 
     # Advance button
     advance_icon = PhotoImage(master=choice_frame, file="data/images/icons/icon-advance.png").subsample(8, 9)
-    advance_button = Button(choice_frame, image=advance_icon)
+    advance_button = Button(choice_frame, image=advance_icon, command=lambda: advance(battle_canvas, card_1, card_2, healthbars, buttons_list, battleground, combat_log))
     advance_button.advance_icon = advance_icon
     advance_button.pack()
+
+    buttons_list.append(advance_button)
 
     choice_frame.grid(row=1, column=2)
 
