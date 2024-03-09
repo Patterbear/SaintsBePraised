@@ -4,7 +4,7 @@ from tkinter import Tk, Frame, Label, Canvas, E, PhotoImage, Button, N, INSERT, 
 from tkinter.scrolledtext import ScrolledText
 from turtle import RawTurtle, TurtleScreen
 
-from animations.combat import draw_battle, animate_attack
+from animations.combat import draw_battle, animate_attack, animate_heal, animate_brace
 from data.moves import get_move
 
 # Temporary to prevent circular imports
@@ -163,6 +163,10 @@ def animate_move(canvas, card_1, card_2, battleground):
         case "attack0":
             print("hello")
             animate_attack(canvas, card_1, card_2, battleground)
+        case "heal0":
+            animate_heal(canvas, card_1, card_2, battleground)
+        case "brace0":
+            animate_brace(canvas, card_1, card_2, battleground)
 
 
 #  Advance function

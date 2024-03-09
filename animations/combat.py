@@ -2,6 +2,22 @@ from time import sleep
 from tkinter import PhotoImage, NW
 
 
+# Get sprite width function
+def get_sprite_width(card):
+    sprite = PhotoImage(file="data/images/sprites/" + card.card_id + "-sprite.png")
+
+    # Divided by 2 as sprites are usually sub sampled by 2 anyway
+    return sprite.width() / 2
+
+
+# Get sprite height function
+def get_sprite_height(card):
+    sprite = PhotoImage(file="data/images/sprites/" + card.card_id + "-sprite.png")
+
+    # Divided by 2 as sprites are usually sub sampled by 2 anyway
+    return sprite.height() / 2
+
+
 # Draw battle scene function
 # draws sprites, battleground and effects to canvas
 # can be used to animate sprites and display effects
@@ -52,3 +68,21 @@ def animate_attack(canvas, attacker, defender, battleground):
     draw_battle(canvas, attacker, defender, battleground, [0, 0, 15, 0])
     sleep(1)
     draw_battle(canvas, attacker, defender, battleground)
+
+
+# Heal animation
+def animate_heal(canvas, healer, opponent, battleground):
+    draw_battle(canvas, healer, opponent, battleground, [0, 10, 0, 0])
+    sleep(1)
+    display_effect(canvas, (get_sprite_width(healer) / 2) + 10, canvas.winfo_reqheight() / 2, "prayer")
+    sleep(1)
+    draw_battle(canvas, healer, opponent, battleground)
+
+
+# Brace animation
+def animate_brace(canvas, defender, opponent, battleground):
+    draw_battle(canvas, defender, opponent, battleground, [-15, 0, 0, 0])
+    sleep(1)
+    display_effect(canvas, (get_sprite_width(defender) / 2) - 5, (canvas.winfo_reqheight() / 2) + (get_sprite_height(defender) / 4), "brace")
+    sleep(1)
+    draw_battle(canvas, defender, opponent, battleground)
