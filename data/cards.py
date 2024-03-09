@@ -6,7 +6,8 @@ saints = {
     "saint-andrew": ["saint", "Andrew the Apostle", "scotland", 50, 500, 30, 50, ["apostle-of-christ", "fisher-of-men", "martyred-by-crucifixion"]],
     "saint-david": ["saint", "David of Mynyw", "wales", 50, 500, 20, 50, ["raising-the-earth", "asceticism", "vision-from-christ"]],
     "saint-patrick": ["saint", "Patrick the Enlightener", "ireland", 50, 500, 60, 50, ["snake-banisher", "fast-on-the-mountain", "enlightener-of-ireland"]],
-    "saint-michael": ["saint", "Michael the Archangel", "heaven", 70, 750, 80, 60, []]
+    "saint-michael": ["saint", "Michael the Archangel", "heaven", 70, 750, 80, 60, []],
+    "saint-bartholomew": ["saint", "Bartholomew the Apostle", "heaven", 50, 500, 30, 70, []],
 }
 
 knights = {
