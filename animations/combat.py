@@ -57,21 +57,30 @@ def display_effect(canvas, x, y, effect):
 
 
 # Attack animation
-def animate_attack(canvas, attacker, defender, battleground):
-    draw_battle(canvas, attacker, defender, battleground, [-15, 0, 0, 0])
+def animate_attack(canvas, attacker, defender, battleground, player):
+    if player:
+        coords = [[-15, 0, 0,0], [384, 0, 0, 0], [0, 0, -15, 0], [0, 0, 15, 0]]
+        effect_x = 834
+        effect = "attack"
+    else:
+        coords = [[0, 0, 15, 0], [0, 0, -384, 0], [-15, 0, -0, 0], [15, 0, 0, 0]]
+        effect_x = 190
+        effect = "attack-reverse"
+
+    draw_battle(canvas, attacker, defender, battleground, coords[0])
     sleep(1)
-    draw_battle(canvas, attacker, defender, battleground, [384, 0, 0, 0])
-    display_effect(canvas, 834, canvas.winfo_reqheight() / 2, "attack")
+    draw_battle(canvas, attacker, defender, battleground, coords[1])
+    display_effect(canvas, effect_x, canvas.winfo_reqheight() / 2, effect)
     sleep(1)
-    draw_battle(canvas, attacker, defender, battleground, [0, 0, -15, 0])
+    draw_battle(canvas, attacker, defender, battleground, coords[2])
     sleep(1)
-    draw_battle(canvas, attacker, defender, battleground, [0, 0, 15, 0])
+    draw_battle(canvas, attacker, defender, battleground, coords[3])
     sleep(1)
     draw_battle(canvas, attacker, defender, battleground)
 
 
 # Heal animation
-def animate_heal(canvas, healer, opponent, battleground):
+def animate_heal(canvas, healer, opponent, battleground, player):
     draw_battle(canvas, healer, opponent, battleground, [0, 10, 0, 0])
     sleep(1)
     display_effect(canvas, (get_sprite_width(healer) / 2) + 10, canvas.winfo_reqheight() / 2, "prayer")
@@ -80,7 +89,7 @@ def animate_heal(canvas, healer, opponent, battleground):
 
 
 # Brace animation
-def animate_brace(canvas, defender, opponent, battleground):
+def animate_brace(canvas, defender, opponent, battleground, player):
     draw_battle(canvas, defender, opponent, battleground, [-15, 0, 0, 0])
     sleep(1)
     display_effect(canvas, (get_sprite_width(defender) / 2) - 5, (canvas.winfo_reqheight() / 2) + (get_sprite_height(defender) / 4), "brace")

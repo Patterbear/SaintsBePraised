@@ -157,16 +157,27 @@ def choose_move(card, move, choice_label, menu, buttons):
 
 # Animate move function
 # calls an animation function determined by the given move
-def animate_move(canvas, card_1, card_2, battleground):
-    print(card_1.next_move.move_id)
-    match card_1.next_move.move_id:
+def animate_move(canvas, card_1, card_2, battleground, player):
+    if player:
+        card = card_1
+    else:
+        card = card_2
+
+    match card.next_move.move_id:
         case "attack0":
             print("hello")
-            animate_attack(canvas, card_1, card_2, battleground)
+            animate_attack(canvas, card_1, card_2, battleground, player)
         case "heal0":
-            animate_heal(canvas, card_1, card_2, battleground)
+            animate_heal(canvas, card_1, card_2, battleground, player)
         case "brace0":
-            animate_brace(canvas, card_1, card_2, battleground)
+            animate_brace(canvas, card_1, card_2, battleground, player)
+
+
+def update_combat_log(combat_log, message):
+    combat_log.config(state='normal')
+    combat_log.delete(1.0, END)
+    combat_log.insert(INSERT, message)
+    combat_log.config(state='disabled')
 
 
 #  Advance function
@@ -178,13 +189,19 @@ def advance(battle_canvas, card_1, card_2, healthbars, buttons, battleground, co
     # Player card move
 
     # Combat log update
-    combat_log.config(state='normal')
-    combat_log.delete(1.0, END)
-    combat_log.insert(INSERT, card_1.name + " uses " + card_1.next_move.title + ".")
-    combat_log.config(state='disabled')
+    update_combat_log(combat_log, card_1.name + " uses " + card_1.next_move.title + ".")
 
     # Animate move
-    animate_move(battle_canvas, card_1, card_2, battleground)
+    animate_move(battle_canvas, card_1, card_2, battleground, True)
+
+
+
+    # Opponent move
+    card_2.choose_move()
+    update_combat_log(combat_log, card_2.name + " uses " + card_2.next_move.title + ".")
+    animate_move(battle_canvas, card_1, card_2, battleground, False)
+
+
 
     # Re-enable button
     toggle_buttons(buttons, True)
